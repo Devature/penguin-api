@@ -84,6 +84,12 @@
 	<profiles>
 		<profile>
 			<id>kyle-staging</id>
+			<activation>
+			<property>
+				<name>environment</name>
+				<value>kyle-staging</value>
+			</property>
+			</activation>
 			<build>
 				<resources>
 					<resource>
