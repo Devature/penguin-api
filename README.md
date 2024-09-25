@@ -1,3 +1,3 @@
-## Launching the app with the `dev` profile (reads values from application-dev.properties)
+## Launching the app
 
-`mvn spring-boot:run "-Dspring-boot.run.profiles=dev"` (Windows Terminal)
+`mvn spring-boot:run`
