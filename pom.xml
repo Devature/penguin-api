@@ -85,7 +85,7 @@
 		<profile>
 			<id>kyle-staging</id>
 			<properties>
-				<config.file>/src/main/resources/application-kyle-staging.properties</config.file>
+				<config.file>./src/main/resources/application-kyle-staging.properties</config.file>
 			</properties>
 		</profile>
 	</profiles>
