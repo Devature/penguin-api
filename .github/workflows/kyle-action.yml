@@ -16,7 +16,7 @@ jobs:
         with:
           java-version: 17
       - name: Build project with Maven
-        run: mvn package -Denvironment=kyle-staging
+        run: mvn package -Dspring.profiles.active=kyle-staging
       - name: SCP bundle to VM
         uses: appleboy/scp-action@v0.1.7
         with:
