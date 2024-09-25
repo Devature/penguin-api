@@ -17,3 +17,11 @@ jobs:
           java-version: 17
       - name: Build project with Maven
         run: mvn -B package --file pom.xml
+      - name: SCP bundle to VM
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.KYLE_STAGING_HOST }}
+          username: ${{ secrets.KYLE_STAGING_USERNAME }}
+          key: ${{ secrets.KYLE_STAGING_KEY }}
+          source: "./target"
+          target: ${{ secrets.KYLE_PENGUIN_API_DEPLOY_DIRECTORY }}
