@@ -8,7 +8,7 @@ import java.util.HashMap;
 @RestController
 public class RootController {
 
-    @GetMapping("/")
+    @GetMapping("/api/test")
     public Map<String, Object> getRootData() {
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Welcome to Penguin API");

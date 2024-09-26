@@ -23,6 +23,8 @@ public class PenguinApiApplication {
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
 						.allowedOrigins(clientOrigin)
+						.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
 						.allowCredentials(true);
 			}
 		};
