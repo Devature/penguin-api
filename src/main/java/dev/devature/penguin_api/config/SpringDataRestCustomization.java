@@ -1,4 +1,4 @@
-package com.devature.penguin_api.config;
+package dev.devature.penguin_api.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;

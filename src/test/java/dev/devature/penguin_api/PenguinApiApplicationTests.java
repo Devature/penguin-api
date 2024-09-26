@@ -1,4 +1,4 @@
-package com.devature.penguin_api;
+package dev.devature.penguin_api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
