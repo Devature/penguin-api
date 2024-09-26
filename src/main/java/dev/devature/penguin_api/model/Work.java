@@ -1,4 +1,4 @@
-package com.devature.penguin_api.model;
+package dev.devature.penguin_api.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

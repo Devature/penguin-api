@@ -1,6 +1,6 @@
-package com.devature.penguin_api.repository;
+package dev.devature.penguin_api.repository;
 
-import com.devature.penguin_api.model.Work;
+import dev.devature.penguin_api.model.Work;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
