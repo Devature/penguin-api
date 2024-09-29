@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.containsString;
@@ -15,6 +16,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -41,6 +44,7 @@ public class RegisterControllerTest {
      *  /TODO: Switch this to session token.
      */
     @Test
+    @WithMockUser("ADMIN")
     public void registerUserSucceed() throws Exception {
         User user = new User("johnsmith@example.com", "Password_1");
         String userJson = objectMapper.writeValueAsString(user);
@@ -48,6 +52,7 @@ public class RegisterControllerTest {
         when(registerService.registerUser(user)).thenReturn(user);
 
         this.mockMvc.perform(post("/api/v1/user/registration")
+                        .with(csrf())
                         .contentType("application/json")
                         .content(userJson))
                 .andExpect(status().is(201))
@@ -64,6 +69,7 @@ public class RegisterControllerTest {
      *  /TODO: Switch this to session token.
      */
     @Test
+    @WithMockUser(roles = "ADMIN")
     public void registerUserFailed() throws Exception {
         User user = new User("johnsmith@example.com", "Password_1");
         String userJson = objectMapper.writeValueAsString(user);
@@ -71,6 +77,7 @@ public class RegisterControllerTest {
         when(registerService.registerUser(user)).thenReturn(null);
 
         this.mockMvc.perform(post("/api/v1/user/registration")
+                .with(csrf())
                 .contentType("application/json")
                 .content(userJson))
                 .andExpect(status().isBadRequest())

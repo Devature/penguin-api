@@ -2,20 +2,19 @@ package dev.devature.penguin_api.config;
 
 import io.jsonwebtoken.Jwts;
 import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 
 import javax.crypto.SecretKey;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Date;
-import java.util.Random;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
 
     @Value("${argon2.saltLength}")
