@@ -65,6 +65,7 @@ public class SecurityConfig {
     }
 
     /**
+     * Do not use this is just a test.
      * @param subject Take in a name of the user to produce a session token.
      * @return A {@code String} token that the user will use.
      */
