@@ -1,4 +1,4 @@
-package dev.devature.penguin_api.services;
+package dev.devature.penguin_api.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
