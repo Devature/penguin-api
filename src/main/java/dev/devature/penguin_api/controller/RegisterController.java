@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api/v1/user")
 public class RegisterController {
     private RegisterService registerService;
 
@@ -23,7 +24,7 @@ public class RegisterController {
      * @return ResponseEntity of 201 if the registration was successful or 400 if the registration was
      * a failure.
      */
-    @PostMapping("/api/v1/users/registration")
+    @PostMapping("/registration")
     public ResponseEntity<String> register(@RequestBody User user){
         User newUser = registerService.registerUser(user);
 
