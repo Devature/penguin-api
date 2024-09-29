@@ -13,4 +13,7 @@ jobs:
         with:
           java-version: 17
       - name: Test project with Maven
+        env:
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: mvn test

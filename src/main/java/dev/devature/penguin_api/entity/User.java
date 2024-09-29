@@ -39,6 +39,12 @@ public class User {
 
     private String settings;
 
+
+    /**
+     * For the use of MockMVC Jackson testing.
+     */
+    User() {}
+
     public User(String email, String password) {
         this.email = email;
         this.password = password;
