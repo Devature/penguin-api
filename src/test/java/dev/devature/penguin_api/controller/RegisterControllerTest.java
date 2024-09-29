@@ -47,7 +47,7 @@ public class RegisterControllerTest {
 
         when(registerService.registerUser(user)).thenReturn(user);
 
-        this.mockMvc.perform(post("/api/v1/users/registration")
+        this.mockMvc.perform(post("/api/v1/user/registration")
                         .contentType("application/json")
                         .content(userJson))
                 .andExpect(status().is(201))
@@ -70,7 +70,7 @@ public class RegisterControllerTest {
 
         when(registerService.registerUser(user)).thenReturn(null);
 
-        this.mockMvc.perform(post("/api/v1/users/registration")
+        this.mockMvc.perform(post("/api/v1/user/registration")
                 .contentType("application/json")
                 .content(userJson))
                 .andExpect(status().isBadRequest())
