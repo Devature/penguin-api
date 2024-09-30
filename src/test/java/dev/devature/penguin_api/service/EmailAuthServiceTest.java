@@ -1,7 +1,7 @@
 package dev.devature.penguin_api.service;
 
 import dev.devature.penguin_api.dto.AuthRequest;
-import dev.devature.penguin_api.repository.AuthenticationRepository;
+import dev.devature.penguin_api.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -19,7 +19,7 @@ class EmailAuthServiceTest {
     private EmailAuthService emailAuthService;
 
     @Mock
-    private AuthenticationRepository authenticationRepository;
+    private UserRepository userRepository;
 
     @Mock
     private Argon2PasswordEncoder passwordEncoder;
@@ -97,13 +97,13 @@ class EmailAuthServiceTest {
 
         String hashedPassword = "$argon2id$v=19$m=65536,t=3,p=4$...";
 
-        when(authenticationRepository.getHashedPasswordByEmail(authRequest.getEmail())).thenReturn(hashedPassword);
+        when(userRepository.getHashedPasswordByEmail(authRequest.getEmail())).thenReturn(hashedPassword);
         when(passwordEncoder.matches(authRequest.getPassword(), hashedPassword)).thenReturn(true);
 
         boolean result = emailAuthService.authenticate(authRequest);
 
         assertTrue(result);
-        verify(authenticationRepository).getHashedPasswordByEmail(authRequest.getEmail());
+        verify(userRepository).getHashedPasswordByEmail(authRequest.getEmail());
     }
 
     @Test
@@ -114,7 +114,7 @@ class EmailAuthServiceTest {
 
         String hashedPassword = "$argon2id$v=19$m=65536,t=3,p=4$...";
 
-        when(authenticationRepository.getHashedPasswordByEmail(authRequest.getEmail())).thenReturn(hashedPassword);
+        when(userRepository.getHashedPasswordByEmail(authRequest.getEmail())).thenReturn(hashedPassword);
         when(passwordEncoder.matches(authRequest.getPassword(), hashedPassword)).thenReturn(false);
 
         boolean result = emailAuthService.authenticate(authRequest);
@@ -128,7 +128,7 @@ class EmailAuthServiceTest {
         authRequest.setEmail("notfound@example.com");
         authRequest.setPassword("SomePassword");
 
-        when(authenticationRepository.getHashedPasswordByEmail(authRequest.getEmail())).thenReturn(null);
+        when(userRepository.getHashedPasswordByEmail(authRequest.getEmail())).thenReturn(null);
 
         boolean result = emailAuthService.authenticate(authRequest);
 
