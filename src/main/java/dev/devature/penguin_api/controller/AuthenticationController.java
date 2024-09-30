@@ -21,13 +21,20 @@ public class AuthenticationController {
 
     private final Map<String, AuthenticationStrategy> strategies;
 
-    // makes a map (like this Map<String, AuthenticationStrategy>) from our AuthenticationStrategy implementations
+    /**
+     * makes a map (like this Map<String, AuthenticationStrategy>) from our AuthenticationStrategy implementations
+     * @param strategyList gathered from AuthenticationStrategy implementations
+     */
     @Autowired
     public AuthenticationController(List<AuthenticationStrategy> strategyList) {
         this.strategies = strategyList.stream()
                 .collect(Collectors.toMap(strategy -> strategy.getClass().getSimpleName(), strategy -> strategy));
     }
 
+    /**
+     * @param authRequest an AuthRequest to get authentication type and credentials
+     * @return a 200 response if successful or 403 response if not
+     */
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody AuthRequest authRequest) {
         String authType = authRequest.getAuthType();
