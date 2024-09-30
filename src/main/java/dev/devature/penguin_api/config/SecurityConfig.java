@@ -53,15 +53,6 @@ public class SecurityConfig {
         return new Argon2PasswordEncoder(saltLength, hashLength, parallelism, memory, iterations);
     }
 
-    /**
-     * Used to generate secured salt for password.
-     * @return {@code String} with the encoded salt.
-     */
-    public String generateNewSalt(){
-        byte[] salt = new byte[saltLength];
-        random.nextBytes(salt);
-        return Base64.getEncoder().encodeToString(salt);
-    }
 
     /**
      * Builds the secret key to be used for signing and verifying JWT tokens.
