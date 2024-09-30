@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AuthenticationRepository extends JpaRepository<User, Long> {
 
-    @Query("SELECT password FROM user WHERE username = :username")
-    String getHashedPasswordByUsername(@Param("username") String username);
+    @Query("SELECT u.password FROM User u WHERE u.email = :email")
+    String getHashedPasswordByEmail(@Param("email") String email);
 
 }

@@ -16,14 +16,14 @@ public class UserDAO {
     }
 
     /**
-     * @param username the username to lookup in the database
+     * @param email the username to lookup in the database
      * @return a single row corresponding to the provided username, or null
      * if the query finds one or more matches, or no matches
      */
-    public String getHashedPasswordByUsername(String username) {
-        String sql = "SELECT password FROM users WHERE username = ?";
+    public String getHashedPasswordByUsername(String email) {
+        String sql = "SELECT password FROM users WHERE email = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, new Object[]{username}, String.class);
+            return jdbcTemplate.queryForObject(sql, new Object[]{email}, String.class);
         } catch (Exception e) {
             System.out.println("Error fetching hashed password: " + e.getMessage());
             return null;

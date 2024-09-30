@@ -1,5 +1,6 @@
 package dev.devature.penguin_api.controller;
 
+import dev.devature.penguin_api.service.EmailAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("api/v1/user")
 public class AuthenticationController {
 
     private final Map<String, AuthenticationStrategy> strategies;
@@ -38,11 +39,14 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody AuthRequest authRequest) {
         String authType = authRequest.getAuthType();
-        AuthenticationStrategy strategy = strategies.get(authType + "AuthService");
+        AuthenticationStrategy strategy = this.strategies.get(authType + "AuthService");
 
         if (strategy == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unsupported authentication type");
         }
+
+        boolean isValid = strategy.checkValidity(authRequest);
+        if (!isValid) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
 
         boolean isAuthenticated = strategy.authenticate(authRequest);
 
