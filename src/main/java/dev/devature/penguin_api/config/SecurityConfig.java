@@ -64,19 +64,11 @@ public class SecurityConfig {
     }
 
     /**
-     * Do not use this is just a test.
-     * @param subject Take in a name of the user to produce a session token.
-     * @return A {@code String} token that the user will use.
+     * Builds the secret key to be used for signing and verifying JWT tokens.
+     * @return A {@code SecretKey} to be used for signing and verifying JWT tokens.
      */
-    public String createJWTToken(String issuer, String subject, Long id){
-        SecretKey key = Jwts.SIG.HS256.key().build();
-
-        return  Jwts.builder()
-                .issuer(issuer)
-                .subject(subject)
-                .issuedAt(new Date())
-                .id(id.toString())
-                .signWith(key)
-                .compact();
+    @Bean
+    public SecretKey secretKey() {
+        return Jwts.SIG.HS256.key().build();
     }
 }
