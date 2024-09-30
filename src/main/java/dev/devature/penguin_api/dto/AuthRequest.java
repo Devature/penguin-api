@@ -30,7 +30,9 @@ public class AuthRequest {
         this.password = password;
     }
 
-    AuthRequest(String authType, String email, String password) {
+    public AuthRequest(){}
+
+    public AuthRequest(String authType, String email, String password) {
         this.authType = authType;
         this.email = email;
         this.password = password;
