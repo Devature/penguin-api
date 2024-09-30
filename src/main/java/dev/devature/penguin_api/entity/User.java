@@ -19,8 +19,6 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    private String salt;
-
     private String name;
 
     private String google_auth_token;
@@ -50,13 +48,12 @@ public class User {
         this.password = password;
     }
 
-    public User(Long id, String email, String password, String salt, String name, String google_auth_token,
+    public User(Long id, String email, String password, String name, String google_auth_token,
                 String google_refresh_token, String microsoft_auth_token, String microsoft_refresh_token,
                 Timestamp created_at, Timestamp last_access, String role, String settings) {
         this.id = id;
         this.email = email;
         this.password = password;
-        this.salt = salt;
         this.name = name;
         this.google_auth_token = google_auth_token;
         this.google_refresh_token = google_refresh_token;
@@ -90,14 +87,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
     }
 
     public String getName() {
@@ -178,11 +167,11 @@ public class User {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
         return Objects.equals(id, user.id) && Objects.equals(email, user.email) &&
-                Objects.equals(password, user.password) && Objects.equals(salt, user.salt);
+                Objects.equals(password, user.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, password, salt);
+        return Objects.hash(id, email, password);
     }
 }

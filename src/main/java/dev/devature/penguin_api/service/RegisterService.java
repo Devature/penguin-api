@@ -42,12 +42,7 @@ public class RegisterService {
             return null;
         }
 
-        String salt = securityConfig.generateNewSalt();
-        user.setSalt(salt);
-
-        String saltedPassword = user.getSalt() + user.getPassword();
-
-        String hashedPassword = securityConfig.passwordEncoder().encode(saltedPassword);
+        String hashedPassword = securityConfig.passwordEncoder().encode(user.getPassword());
         user.setPassword(hashedPassword);
 
         return registerRepository.save(user);
