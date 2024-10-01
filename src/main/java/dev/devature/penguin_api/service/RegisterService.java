@@ -37,9 +37,8 @@ public class RegisterService {
     public User registerUser(User user){
         boolean isEmailValid = checkEmailRequirements(user.getEmail());
         boolean isPasswordValid = checkPasswordRequirements(user.getPassword());
-        boolean isEmailAvailable = checkEmailAvailable(user.getEmail());
 
-        if(!isEmailValid || !isPasswordValid || !isEmailAvailable){
+        if(!isEmailValid || !isPasswordValid){
             return null;
         }
 
@@ -71,10 +70,9 @@ public class RegisterService {
 
     /**
      * @param email Take in a {@code String} to check if email already exist in database.
-     * @return Return {@code True} if email does not available or {@code False} if the email is unavailable.
+     * @return Return {@code True} if the email is available or {@code False} if the email is unavailable.
      */
     public boolean checkEmailAvailable(String email){
-        User user = userRepository.findByEmail(email);
-        return user == null;
+        return userRepository.findByEmail(email) == null;
     }
 }

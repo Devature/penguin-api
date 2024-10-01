@@ -3,6 +3,7 @@ package dev.devature.penguin_api.controller;
 import dev.devature.penguin_api.entity.User;
 import dev.devature.penguin_api.service.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,12 +24,17 @@ public class RegisterController {
      */
     @PostMapping("/registration")
     public ResponseEntity<String> register(@RequestBody User user){
+        if(!registerService.checkEmailAvailable(user.getEmail())){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Someone is already using that email.");
+        }
+
         User newUser = registerService.registerUser(user);
 
         if(newUser == null){
-            return ResponseEntity.status(400).body("Registration unsuccessful. Failed to create an account.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Registration unsuccessful. Failed to create an account.");
         }
 
-        return ResponseEntity.status(201).body("Registration successful.");
+        return ResponseEntity.status(HttpStatus.CREATED).body("Registration successful.");
     }
 }
