@@ -43,7 +43,7 @@ class LoginControllerTest extends RequestsTest {
 
     @Test
     public void loginFailure() throws Exception {
-        User user = new User("testemail2testemail.com", "aValidPa55_");
+        User user = new User("testemail2testemail.com", "invalid");
         String userJson = objectMapper.writeValueAsString(user);
 
         when(loginService.checkValidity(user)).thenReturn(true);
