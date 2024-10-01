@@ -30,6 +30,8 @@ public class RegisterControllerTest extends RequestsTest {
         User user = new User("johnsmith@example.com", "Password_1");
         String userJson = objectMapper.writeValueAsString(user);
 
+        when(registerService.checkEmailAvailable(user.getEmail())).thenReturn(true);
+
         when(registerService.registerUser(user)).thenReturn(user);
 
         this.mockMvc.perform(post("/api/v1/user/registration")
