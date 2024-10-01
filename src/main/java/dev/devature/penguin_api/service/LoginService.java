@@ -1,8 +1,9 @@
 package dev.devature.penguin_api.service;
 
 import dev.devature.penguin_api.entity.User;
+import dev.devature.penguin_api.model.JwtToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import dev.devature.penguin_api.repository.UserRepository;
@@ -11,9 +12,9 @@ import dev.devature.penguin_api.utils.EmailPasswordValidationUtils;
 @Service
 public class LoginService {
 
-    @Autowired
     private final UserRepository userRepository;
-    private final Argon2PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     /**
      *
@@ -22,9 +23,10 @@ public class LoginService {
      *                        against the hashed password in data
      */
     @Autowired
-    public LoginService(UserRepository userRepository, Argon2PasswordEncoder passwordEncoder) {
+    public LoginService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     /**
@@ -45,11 +47,15 @@ public class LoginService {
 
     /**
      * @param user an User containing the input email and password
-     * @return true if the password is verified successfully, false otherwise
+     * @return A {@code JwtToken} object containing the token the user should use
+     *         for subsequent authentication requests, or null if the user did not
+     *         authenticate successfully
      */
-    public boolean authenticate(User user) {
+    public JwtToken authenticate(User user) {
+        if (!checkValidity(user)) return null;
         User foundUser = userRepository.findByEmail(user.getEmail());
-        if (foundUser == null) return false;
-        return foundUser.getPassword() != null &&  this.verifyPassword(user.getPassword(), foundUser.getPassword());
+        if (foundUser != null && this.verifyPassword(user.getPassword(), foundUser.getPassword()))
+            return this.jwtService.generateToken(user.getEmail());
+        else return null;
     }
 }

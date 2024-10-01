@@ -1,5 +1,6 @@
 package dev.devature.penguin_api.service;
 
+import dev.devature.penguin_api.model.JwtToken;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.JwtParser;
@@ -28,26 +29,26 @@ public class JwtService {
         this.jwtParser = Jwts.parser().verifyWith(secretKey).build();
     }
 
-    public Optional<Claims> verifyToken(String token) {
+    public Optional<Claims> verifyToken(JwtToken token) {
         try {
-            return Optional.of(this.jwtParser.parseSignedClaims(token).getPayload());
+            return Optional.of(this.jwtParser.parseSignedClaims(token.token()).getPayload());
         } catch (JwtException | IllegalArgumentException e) {
             return Optional.empty();
         }
     }
 
-    public String generateToken(String subject) {
+    public JwtToken generateToken(String subject) {
         return this.generateToken(subject, null);
     }
 
-    public String generateToken(String subject, Map<String, ?> claims) {
-        return Jwts.builder()
+    public JwtToken generateToken(String subject, Map<String, ?> claims) {
+        return new JwtToken(Jwts.builder()
                 .subject(subject)
                 .claims(claims)
                 .issuer("Ticket Penguin")
                 .issuedAt(Date.from(Instant.now()))
                 .expiration(Date.from(Instant.now().plusSeconds(defaultTTLSeconds)))
                 .signWith(this.secretKey)
-                .compact();
+                .compact());
     }
 }

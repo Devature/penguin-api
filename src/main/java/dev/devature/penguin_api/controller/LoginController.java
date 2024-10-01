@@ -1,6 +1,7 @@
 package dev.devature.penguin_api.controller;
 
 import dev.devature.penguin_api.entity.User;
+import dev.devature.penguin_api.model.JwtToken;
 import dev.devature.penguin_api.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,15 +28,10 @@ public class LoginController {
      * @return a 200 response if successful or 401 response if not
      */
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody User user) {
-
-        boolean isValid = loginService.checkValidity(user);
-        if (!isValid) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
-
-        boolean isAuthenticated = loginService.authenticate(user);
-
-        return isAuthenticated ? ResponseEntity.ok("Login successful") :
-                ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+    public ResponseEntity<JwtToken> login(@RequestBody User user) {
+        JwtToken jwtToken = loginService.authenticate(user);
+        return jwtToken != null ? ResponseEntity.ok(jwtToken) :
+                ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
 
