@@ -3,7 +3,10 @@ package dev.devature.penguin_api.service;
 import dev.devature.penguin_api.config.SecurityConfig;
 import dev.devature.penguin_api.entity.User;
 import dev.devature.penguin_api.repository.UserRepository;
+import dev.devature.penguin_api.utils.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,18 +37,27 @@ public class RegisterService {
      * @return User {@code User} object if the account was successfully add or
      * {@code null} if it failed to add or meet requirements.
      */
-    public User registerUser(User user){
-        boolean isEmailValid = checkEmailRequirements(user.getEmail());
-        boolean isPasswordValid = checkPasswordRequirements(user.getPassword());
+    public ApiResponse<User> registerUser(User user) {
+        ApiResponse<User> checkCondition = issueResponse(user);
 
-        if(!isEmailValid || !isPasswordValid){
-            return null;
+        if(checkCondition != null){
+            return checkCondition;
         }
 
         String hashedPassword = securityConfig.passwordEncoder().encode(user.getPassword());
         user.setPassword(hashedPassword);
 
-        return userRepository.save(user);
+        User returnUser = userRepository.save(user);
+
+        boolean isValid = returnUser.getId() != null
+                && returnUser.getEmail() != null
+                && !returnUser.getEmail().isEmpty()
+                && returnUser.getPassword() != null
+                && !returnUser.getPassword().isEmpty();
+
+        return isValid
+                ? new ApiResponse<>(HttpStatus.OK, "Registration Successful.", returnUser)
+                : new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected server error.", user);
     }
 
     /**
@@ -74,5 +86,29 @@ public class RegisterService {
      */
     public boolean checkEmailAvailable(String email){
         return userRepository.findByEmail(email) == null;
+    }
+
+
+    /**
+     * @param user Take in a {@code} user object to be processed.
+     * @return Return a {@code ApiResponse<>} if there is issue or {@code null} if there isn't an issue.
+     */
+    private ApiResponse<User> issueResponse(User user){
+        boolean isEmailValid = checkEmailRequirements(user.getEmail());
+        boolean isPasswordValid = checkPasswordRequirements(user.getPassword());
+
+        if(!isEmailValid){
+            return new ApiResponse<>(HttpStatus.FORBIDDEN, "Invalid email has been entered.", user);
+        }
+
+        if(!isPasswordValid){
+            return new ApiResponse<>(HttpStatus.FORBIDDEN, "Invalid password has been entered.", user);
+        }
+
+        if(!checkEmailAvailable(user.getEmail())){
+            return new ApiResponse<>(HttpStatus.CONFLICT, "Someone is already using that email.", user);
+        }
+
+        return null;
     }
 }

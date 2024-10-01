@@ -3,8 +3,10 @@ package dev.devature.penguin_api.controller;
 import dev.devature.penguin_api.entity.User;
 import dev.devature.penguin_api.service.RegisterService;
 
+import dev.devature.penguin_api.utils.ApiResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.when;
@@ -25,7 +27,9 @@ public class RegisterControllerTest extends RequestsTest {
 
         when(registerService.checkEmailAvailable(user.getEmail())).thenReturn(true);
 
-        when(registerService.registerUser(user)).thenReturn(user);
+        ApiResponse<User> userResponse = new ApiResponse<>(HttpStatus.CREATED, "Registration successful.", user);
+
+        when(registerService.registerUser(user)).thenReturn(userResponse);
 
         this.mockMvc.perform(post("/api/v1/user/registration")
                         .with(csrf())
@@ -38,18 +42,21 @@ public class RegisterControllerTest extends RequestsTest {
     }
 
     @Test
-    public void registerUserFailed() throws Exception {
+    public void registerUser_WithFailed() throws Exception {
         User user = new User("johnsmith@example.com", "Password_1");
         String userJson = objectMapper.writeValueAsString(user);
 
         when(registerService.checkEmailAvailable(user.getEmail())).thenReturn(true);
 
-        when(registerService.registerUser(user)).thenReturn(null);
+        // Mocking the registerUser to return a failed ApiResponse
+        ApiResponse<User> userResponse = new ApiResponse<>(HttpStatus.BAD_REQUEST,
+                "Registration unsuccessful. Failed to create an account.", null);
+        when(registerService.registerUser(user)).thenReturn(userResponse);
 
         this.mockMvc.perform(post("/api/v1/user/registration")
-                .with(csrf())
-                .contentType("application/json")
-                .content(userJson))
+                        .with(csrf())
+                        .contentType("application/json")
+                        .content(userJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(content()
                         .string(containsString("Registration unsuccessful. Failed to create an account.")))
@@ -61,9 +68,13 @@ public class RegisterControllerTest extends RequestsTest {
         User user = new User("testsmith@example.com", "Password_1");
         String userJson = objectMapper.writeValueAsString(user);
 
-        // TODO: Use H2 for this test since we need a stateful testing. Mock is stateless.
+        // TODO: Use H2 for this test since we need a stateful testing. Mock is stateless. This is useless for now.
 
         when(registerService.checkEmailAvailable(user.getEmail())).thenReturn(false);
+
+        ApiResponse<User> userResponse = new ApiResponse<>(HttpStatus.CONFLICT,
+                "Someone is already using that email", user);
+        when(registerService.registerUser(user)).thenReturn(userResponse);
 
         this.mockMvc.perform(post("/api/v1/user/registration")
                         .with(csrf())
