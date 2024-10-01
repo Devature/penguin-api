@@ -1,29 +1,12 @@
 package dev.devature.penguin_api.service;
 
-import dev.devature.penguin_api.entity.User;
+import dev.devature.penguin_api.utils.EmailPasswordValidationUtils;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 
-public class RegisterServiceTest {
-
-    @Mock
-    private User user;
-
-    @InjectMocks
-    private RegisterService registerService;
-
-    @BeforeEach
-    public void setup() throws InterruptedException {
-
-        MockitoAnnotations.openMocks(this);
-    }
-
+public class EmailPasswordValidationUtilsTest {
     @Test
     public void emailRequirementTest(){
         String[] email = {"normal@example.com", "first.last@example.com", "user+tag@example.com",
@@ -33,7 +16,7 @@ public class RegisterServiceTest {
         boolean[] actualResult = new boolean[10];
 
         for(int i = 0; i < email.length; ++i){
-            actualResult[i] = registerService.checkEmailRequirements(email[i]);
+            actualResult[i] = EmailPasswordValidationUtils.isValidEmail(email[i]);
         }
 
         Assertions.assertArrayEquals(expectedResult, actualResult,
@@ -51,7 +34,7 @@ public class RegisterServiceTest {
 
         // When
         for(int i = 0; i < password.length; ++i){
-            actualResult[i] = registerService.checkPasswordRequirements(password[i]);
+            actualResult[i] = EmailPasswordValidationUtils.isValidPassword(password[i]);
         }
 
         // Then
