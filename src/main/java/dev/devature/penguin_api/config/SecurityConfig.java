@@ -10,8 +10,6 @@ import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 
 import javax.crypto.SecretKey;
 import java.security.SecureRandom;
-import java.util.Base64;
-import java.util.Date;
 
 @Configuration
 @EnableWebSecurity
@@ -40,7 +38,7 @@ public class SecurityConfig {
     @PostConstruct
     public void validateConfig(){
         if(memory <= 0 || iterations <= 0 || saltLength <= 0 || hashLength <= 0 || parallelism <= 0){
-            throw new IllegalArgumentException("Memory and iteration must be above a positive value.");
+            throw new IllegalArgumentException("All values must be a positive value.");
         }
     }
 
