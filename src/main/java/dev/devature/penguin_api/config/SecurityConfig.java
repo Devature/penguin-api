@@ -10,8 +10,6 @@ import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 
 import javax.crypto.SecretKey;
 import java.security.SecureRandom;
-import java.util.Base64;
-import java.util.Date;
 
 @Configuration
 @EnableWebSecurity
