@@ -446,14 +446,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_registration_success">Registration - success</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">$ curl 'http://localhost:8080/api/v1/user/registration?_csrf=xn8ZH4vqHU8sFUYALf6i4vmtQNr4ZJlm6csNVzI1cZIROo3L9Ex6ebjeKS0BdnQxTNOWgcmfbbvIV61L3K06YFZTSap0Ar78' -i -X POST \
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ curl 'http://localhost:8080/api/v1/user/registration?_csrf=kKY91PpPNSWr0ihMTP5E3tn-8T2X2rIwd-vuirBhArfXOqWyo5UP7c59ARCGtBgvfdNw6Oic3AWkuIUdEdLYs4hYNNTvDpWD' -i -X POST \
     -H 'Content-Type: application/json' \
     -d '{"id":null,"email":"johnsmith@example.com","password":"Password_1","name":null,"google_auth_token":null,"google_refresh_token":null,"microsoft_auth_token":null,"microsoft_refresh_token":null,"created_at":null,"last_access":null,"role":null,"settings":null}'</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/v1/user/registration?_csrf=xn8ZH4vqHU8sFUYALf6i4vmtQNr4ZJlm6csNVzI1cZIROo3L9Ex6ebjeKS0BdnQxTNOWgcmfbbvIV61L3K06YFZTSap0Ar78 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/v1/user/registration?_csrf=kKY91PpPNSWr0ihMTP5E3tn-8T2X2rIwd-vuirBhArfXOqWyo5UP7c59ARCGtBgvfdNw6Oic3AWkuIUdEdLYs4hYNNTvDpWD HTTP/1.1
 Content-Type: application/json
 Content-Length: 256
 Host: localhost:8080
@@ -475,7 +475,7 @@ Registration successful.</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">$ echo '{"id":null,"email":"johnsmith@example.com","password":"Password_1","name":null,"google_auth_token":null,"google_refresh_token":null,"microsoft_auth_token":null,"microsoft_refresh_token":null,"created_at":null,"last_access":null,"role":null,"settings":null}' | http POST 'http://localhost:8080/api/v1/user/registration?_csrf=xn8ZH4vqHU8sFUYALf6i4vmtQNr4ZJlm6csNVzI1cZIROo3L9Ex6ebjeKS0BdnQxTNOWgcmfbbvIV61L3K06YFZTSap0Ar78' \
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ echo '{"id":null,"email":"johnsmith@example.com","password":"Password_1","name":null,"google_auth_token":null,"google_refresh_token":null,"microsoft_auth_token":null,"microsoft_refresh_token":null,"created_at":null,"last_access":null,"role":null,"settings":null}' | http POST 'http://localhost:8080/api/v1/user/registration?_csrf=kKY91PpPNSWr0ihMTP5E3tn-8T2X2rIwd-vuirBhArfXOqWyo5UP7c59ARCGtBgvfdNw6Oic3AWkuIUdEdLYs4hYNNTvDpWD' \
     'Content-Type:application/json'</code></pre>
 </div>
 </div>
@@ -494,14 +494,14 @@ Registration successful.</code></pre>
 <h3 id="_registration_failure">Registration - failure</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">$ curl 'http://localhost:8080/api/v1/user/registration?_csrf=gtzYt7BTNg5Ymh8OjRjjMainglFSdbcCS0fAig985_6brE-74-q5gNZnVW91oi9rvjXXAZ6RrzA2EYEveSOhvzdPgsyoynqD' -i -X POST \
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ curl 'http://localhost:8080/api/v1/user/registration?_csrf=9UYg3yRcxt_CDRg-rHrgIoSFTz3d56jWOhxyG3JqFoCXW60zkCAW6EI5_urvOikJzlfUFLOyYly8hJz7XCsUIktdIrClPckH' -i -X POST \
     -H 'Content-Type: application/json' \
     -d '{"id":null,"email":"johnsmith@example.com","password":"Password_1","name":null,"google_auth_token":null,"google_refresh_token":null,"microsoft_auth_token":null,"microsoft_refresh_token":null,"created_at":null,"last_access":null,"role":null,"settings":null}'</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/v1/user/registration?_csrf=gtzYt7BTNg5Ymh8OjRjjMainglFSdbcCS0fAig985_6brE-74-q5gNZnVW91oi9rvjXXAZ6RrzA2EYEveSOhvzdPgsyoynqD HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/v1/user/registration?_csrf=9UYg3yRcxt_CDRg-rHrgIoSFTz3d56jWOhxyG3JqFoCXW60zkCAW6EI5_urvOikJzlfUFLOyYly8hJz7XCsUIktdIrClPckH HTTP/1.1
 Content-Type: application/json
 Content-Length: 256
 Host: localhost:8080
@@ -527,7 +527,7 @@ Registration unsuccessful. Failed to create an account.</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-10-01 12:23:23 -0400
+Last updated 2024-10-01 14:05:25 -0400
 </div>
 </div>
 </body>
