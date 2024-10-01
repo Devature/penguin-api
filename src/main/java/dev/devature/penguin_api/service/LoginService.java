@@ -1,16 +1,15 @@
 package dev.devature.penguin_api.service;
 
+import dev.devature.penguin_api.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import dev.devature.penguin_api.interfaces.AuthenticationStrategy;
 import dev.devature.penguin_api.repository.UserRepository;
-import dev.devature.penguin_api.dto.AuthRequest;
-import dev.devature.penguin_api.utils.ValidationUtils;
+import dev.devature.penguin_api.utils.EmailPasswordValidationUtils;
 
 @Service
-public class EmailAuthService implements AuthenticationStrategy {
+public class LoginService {
 
     @Autowired
     private final UserRepository userRepository;
@@ -23,7 +22,7 @@ public class EmailAuthService implements AuthenticationStrategy {
      *                        against the hashed password in data
      */
     @Autowired
-    public EmailAuthService(UserRepository userRepository, Argon2PasswordEncoder passwordEncoder) {
+    public LoginService(UserRepository userRepository, Argon2PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -39,19 +38,18 @@ public class EmailAuthService implements AuthenticationStrategy {
         return passwordEncoder.matches(plainPassword, hashedPassword);
     }
 
-    public boolean checkValidity(AuthRequest authRequest) {
-        return ValidationUtils.isValidEmail(authRequest.getEmail())
-                && ValidationUtils.isValidPassword(authRequest.getPassword());
+    public boolean checkValidity(User user) {
+        return EmailPasswordValidationUtils.isValidEmail(user.getEmail())
+                && EmailPasswordValidationUtils.isValidPassword(user.getPassword());
     }
 
     /**
-     * @param authRequest an AuthRequest containing the authentication type
-     *                   and, in this case, the input email and password
+     * @param user an User containing the input email and password
      * @return true if the password is verified successfully, false otherwise
      */
-    @Override
-    public boolean authenticate(AuthRequest authRequest) {
-        String hashedPassword = userRepository.getHashedPasswordByEmail(authRequest.getEmail());
-        return hashedPassword != null && this.verifyPassword(authRequest.getPassword(), hashedPassword);
+    public boolean authenticate(User user) {
+        User foundUser = userRepository.findByEmail(user.getEmail());
+        if (foundUser == null) return false;
+        return foundUser.getPassword() != null &&  this.verifyPassword(user.getPassword(), foundUser.getPassword());
     }
 }

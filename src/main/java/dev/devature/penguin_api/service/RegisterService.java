@@ -3,7 +3,7 @@ package dev.devature.penguin_api.service;
 import dev.devature.penguin_api.config.SecurityConfig;
 import dev.devature.penguin_api.entity.User;
 import dev.devature.penguin_api.repository.UserRepository;
-import dev.devature.penguin_api.utils.ValidationUtils;
+import dev.devature.penguin_api.utils.EmailPasswordValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,8 +26,8 @@ public class RegisterService {
      * {@code null} if it failed to add or meet requirements.
      */
     public User registerUser(User user) {
-        boolean isEmailValid = ValidationUtils.isValidEmail(user.getEmail());
-        boolean isPasswordValid = ValidationUtils.isValidPassword(user.getPassword());
+        boolean isEmailValid = EmailPasswordValidationUtils.isValidEmail(user.getEmail());
+        boolean isPasswordValid = EmailPasswordValidationUtils.isValidPassword(user.getPassword());
         boolean isEmailAvailable = checkEmailAvailable(user.getEmail());
 
         if (!isEmailValid || !isPasswordValid || !isEmailAvailable) {
