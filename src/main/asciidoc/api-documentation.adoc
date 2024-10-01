@@ -1,0 +1,25 @@
+== Penguin API documentation
+
+=== Registration - success
+
+include::{snippets}/registration/success/http-request.adoc[]
+
+include::{snippets}/registration/success/http-response.adoc[]
+
+=== Registration - failure
+
+include::{snippets}/registration/failure/http-request.adoc[]
+
+include::{snippets}/registration/failure/http-response.adoc[]
+
+=== Login - success
+
+include::{snippets}/login/success/http-request.adoc[]
+
+include::{snippets}/login/success/http-response.adoc[]
+
+=== Login - failure
+
+include::{snippets}/login/failure/http-request.adoc[]
+
+include::{snippets}/login/failure/http-response.adoc[]
