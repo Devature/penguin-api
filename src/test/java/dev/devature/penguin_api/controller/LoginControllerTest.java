@@ -2,73 +2,60 @@ package dev.devature.penguin_api.controller;
 
 import dev.devature.penguin_api.entity.User;
 import dev.devature.penguin_api.service.LoginService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import org.springframework.boot.test.mock.mockito.MockBean;
+
+import static org.hamcrest.Matchers.containsString;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-class LoginControllerTest {
-
-    @InjectMocks
-    private LoginController loginController;
-
-    @Mock
+class LoginControllerTest extends RequestsTest {
+    @MockBean
     private LoginService loginService;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        loginController = new LoginController(loginService);
-    }
-
     @Test
-    void testLogin_Successful() {
+    public void loginSucceed() throws Exception {
         User user = new User("agoodtestemail@testemail.com","Th1sisvalidpass!");
+        String userJson = objectMapper.writeValueAsString(user);
 
         when(loginService.checkValidity(user)).thenReturn(true);
         when(loginService.authenticate(user)).thenReturn(true);
 
-        ResponseEntity<String> response = loginController.login(user);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Login successful", response.getBody());
+        this.mockMvc.perform(post("/api/v1/user/login")
+                        .with(csrf())
+                        .contentType("application/json")
+                        .content(userJson))
+                .andExpect(status().is(200))
+                .andExpect(content()
+                        .string(containsString("Login successful")))
+                .andDo(document("login/success"));
     }
 
-
     @Test
-    void testLogin_InvalidEmail() {
+    public void loginFailure() throws Exception {
         User user = new User("testemail2testemail.com", "aValidPa55_");
+        String userJson = objectMapper.writeValueAsString(user);
 
         when(loginService.checkValidity(user)).thenReturn(true);
         when(loginService.authenticate(user)).thenReturn(false);
 
-        ResponseEntity<String> response = loginController.login(user);
-
-        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-        assertEquals("Invalid credentials", response.getBody());
-    }
-
-    @Test
-    void testLogin_InvalidPass() {
-        User user = new User("testemail@testemail.com","invalid");
-
-        when(loginService.checkValidity(user)).thenReturn(true);
-        when(loginService.authenticate(user)).thenReturn(false);
-
-        ResponseEntity<String> response = loginController.login(user);
-
-        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-        assertEquals("Invalid credentials", response.getBody());
+        this.mockMvc.perform(post("/api/v1/user/login")
+                        .with(csrf())
+                        .contentType("application/json")
+                        .content(userJson))
+                .andExpect(status().is(401))
+                .andExpect(content()
+                        .string(containsString("Invalid credentials")))
+                .andDo(document("login/failure"));
     }
 }
