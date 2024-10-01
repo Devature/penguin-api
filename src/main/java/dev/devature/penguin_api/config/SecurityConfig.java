@@ -10,7 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import javax.crypto.SecretKe
+import javax.crypto.SecretKey;
 
 @Configuration
 @EnableWebSecurity
