@@ -18,13 +18,6 @@ public class RegisterControllerTest extends RequestsTest {
     @MockBean
     private RegisterService registerService;
 
-    /**
-     * Sending a mock http request to POST localhost:8080/api/v1/users/registration with valid credentials.
-     *  Expected Response:
-     *  Status Code: 201
-     *  Response Body: Registration successful.
-     *  /TODO: Fix the CSRF permission issue instead of using admin.
-     */
     @Test
     public void registerUserSucceed() throws Exception {
         User user = new User("johnsmith@example.com", "Password_1");
@@ -44,13 +37,6 @@ public class RegisterControllerTest extends RequestsTest {
                 .andDo(document("registration/success"));
     }
 
-    /**
-     * Sending a mock http request to POST localhost:8080/api/v1/users/registration with valid credentials.
-     *  Expected Response:
-     *  Status Code: 400
-     *  Response Body: Registration unsuccessful. Failed to create an account.
-     *  /TODO: Fix the CSRF permission issue instead of using admin.
-     */
     @Test
     public void registerUserFailed() throws Exception {
         User user = new User("johnsmith@example.com", "Password_1");
@@ -70,13 +56,6 @@ public class RegisterControllerTest extends RequestsTest {
                 .andDo(document("registration/failure"));
     }
 
-    /**
-     * Sending a mock http request to POST localhost:8080/api/v1/users/registration with valid credentials
-     *  Expected Response:
-     *  Status Code: 400
-     *  Response Body: Registration unsuccessful. Failed to create an account.
-     *  /TODO: Fix the CSRF permission issue instead of using admin.
-     */
     @Test
     public void registerUser_WithEmailConflict() throws Exception {
         User user = new User("testsmith@example.com", "Password_1");
