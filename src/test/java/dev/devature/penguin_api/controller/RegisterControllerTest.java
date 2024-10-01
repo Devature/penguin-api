@@ -3,13 +3,20 @@ package dev.devature.penguin_api.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.devature.penguin_api.entity.User;
 import dev.devature.penguin_api.service.RegisterService;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.when;
@@ -17,14 +24,26 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 
 @SpringBootTest
+@ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @AutoConfigureMockMvc
 public class RegisterControllerTest {
 
     @Autowired
+    private WebApplicationContext context;
+
     private MockMvc mockMvc;
+
+    @BeforeEach
+    void setUp( WebApplicationContext webApplicationContext,
+                        RestDocumentationContextProvider restDocumentation) {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context)
+                        .apply(documentationConfiguration(restDocumentation))
+                                                                    .build();
+    }
 
     @MockBean
     private RegisterService registerService;
@@ -35,16 +54,7 @@ public class RegisterControllerTest {
         objectMapper = new ObjectMapper();
     }
 
-    /**
-     * Sending a mock http request to POST localhost:8080/api/v1/users/registration with valid credentials
-     *
-     *  Expected Response:
-     *  Status Code: 201
-     *  Response Body: Registration successful.
-     *  /TODO: Switch this to session token.
-     */
     @Test
-    @WithMockUser("ADMIN")
     public void registerUserSucceed() throws Exception {
         User user = new User("johnsmith@example.com", "Password_1");
         String userJson = objectMapper.writeValueAsString(user);
@@ -57,19 +67,11 @@ public class RegisterControllerTest {
                         .content(userJson))
                 .andExpect(status().is(201))
                 .andExpect(content()
-                        .string(containsString("Registration successful.")));
+                        .string(containsString("Registration successful.")))
+                .andDo(document("registration/success"));
     }
 
-    /**
-     * Sending a mock http request to POST localhost:8080/api/v1/users/registration with valid credentials
-     *
-     *  Expected Response:
-     *  Status Code: 400
-     *  Response Body: Registration unsuccessful. Failed to create an account.
-     *  /TODO: Switch this to session token.
-     */
     @Test
-    @WithMockUser(roles = "ADMIN")
     public void registerUserFailed() throws Exception {
         User user = new User("johnsmith@example.com", "Password_1");
         String userJson = objectMapper.writeValueAsString(user);
@@ -82,6 +84,7 @@ public class RegisterControllerTest {
                 .content(userJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(content()
-                        .string(containsString("Registration unsuccessful. Failed to create an account.")));
+                        .string(containsString("Registration unsuccessful. Failed to create an account.")))
+                .andDo(document("registration/failure"));
     }
 }
