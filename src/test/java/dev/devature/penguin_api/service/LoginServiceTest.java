@@ -8,9 +8,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
+import dev.devature.penguin_api.model.JwtToken;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class LoginServiceTest {
@@ -23,6 +23,9 @@ class LoginServiceTest {
 
     @Mock
     private Argon2PasswordEncoder passwordEncoder;
+
+    @Mock
+    private JwtService jwtService;
 
 
     @BeforeEach
@@ -50,41 +53,41 @@ class LoginServiceTest {
 
         User mockUser = new User("test@example.com", hashedPassword);
         when(userRepository.findByEmail(user.getEmail())).thenReturn(mockUser);
-
         when(passwordEncoder.matches(user.getPassword(), hashedPassword)).thenReturn(true);
+        when(jwtService.generateToken(mockUser.getEmail())).thenReturn(new JwtToken("abc123"));
 
-        boolean result = loginService.authenticate(user);
+        JwtToken result = loginService.authenticate(user);
 
-        assertTrue(result);
+        assertNotNull(result);
         verify(userRepository).findByEmail(user.getEmail());
         verify(passwordEncoder).matches(user.getPassword(), hashedPassword);
     }
 
     @Test
     void testAuthenticate_Failure_InvalidPassword() {
-        User user = new User("test@example.com", "invalid");
+        User user = new User("test@example.com", "invalidP@ssw0rd!");
         String hashedPassword = "$argon2id$v=19$m=65536,t=3,p=4$...";
 
         User mockUser = new User("test@example.com", hashedPassword);
         when(userRepository.findByEmail(user.getEmail())).thenReturn(mockUser);
         when(passwordEncoder.matches(user.getPassword(), hashedPassword)).thenReturn(false);
 
-        boolean result = loginService.authenticate(user);
+        JwtToken result = loginService.authenticate(user);
 
-        assertFalse(result);
+        assertNull(result);
         verify(userRepository).findByEmail(user.getEmail());
         verify(passwordEncoder).matches(user.getPassword(), hashedPassword);
     }
 
     @Test
     void testAuthenticate_Failure_UserNotFound() {
-        User user = new User("notfound@example.com", "SomePassword");
+        User user = new User("notfound@example.com", "SomeP@ssw0rd!");
 
         when(userRepository.findByEmail(user.getEmail())).thenReturn(null);
 
-        boolean result = loginService.authenticate(user);
+        JwtToken result = loginService.authenticate(user);
 
-        assertFalse(result);
+        assertNull(result);
         verify(userRepository).findByEmail(user.getEmail());
     }
 

@@ -9,10 +9,22 @@ public class EmailPasswordValidationUtils {
     private static final Pattern passPattern = Pattern.compile(PASSWORD_REGEX);
     private static final Pattern emailPattern = Pattern.compile(EMAIL_REGEX);
 
+    /**
+     * This is based on the RFC 5322 requirements for email.
+     * @param email Takes in a  {@code String} email to be processed.
+     * @return {@code True} if the password meets requirements or {@code False} if it fails to
+     * meet the requirements.
+     */
     public static boolean isValidEmail(String email) {
         return emailPattern.matcher(email).matches();
     }
 
+    /**
+     * This is based on 1 uppercase, 1 lowercase, 1 special, 1 number, and 8 characters or greater.
+     * @param password Take in {@code String} object password.
+     * @return {@code True} if the password meets requirements or {@code False} if it fails to
+     * meet the requirements.
+     */
     public static boolean isValidPassword(String password) {
         return passPattern.matcher(password).matches();
     }

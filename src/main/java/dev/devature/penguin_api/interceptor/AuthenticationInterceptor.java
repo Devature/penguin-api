@@ -1,5 +1,6 @@
 package dev.devature.penguin_api.interceptor;
 
+import dev.devature.penguin_api.model.JwtToken;
 import dev.devature.penguin_api.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -38,7 +39,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        String token = authorizationHeader.substring("Bearer ".length());
+        JwtToken token = new JwtToken(authorizationHeader.substring("Bearer ".length()));
         if (this.jwtService.verifyToken(token).isPresent()) return true;
         else response.sendError(401, "Invalid authorization token");
 
