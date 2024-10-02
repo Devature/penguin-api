@@ -1,6 +1,7 @@
 package dev.devature.penguin_api.controller;
 
 import dev.devature.penguin_api.entity.User;
+import dev.devature.penguin_api.model.JwtToken;
 import dev.devature.penguin_api.service.LoginService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,8 +29,10 @@ class LoginControllerTest extends RequestsTest {
         User user = new User("agoodtestemail@testemail.com","Th1sisvalidpass!");
         String userJson = objectMapper.writeValueAsString(user);
 
-        when(loginService.checkValidity(user)).thenReturn(true);
-        when(loginService.authenticate(user)).thenReturn(true);
+        JwtToken jwtToken = new JwtToken("abc123");
+        String jwtTokenJson = objectMapper.writeValueAsString(jwtToken);
+
+        when(loginService.authenticate(user)).thenReturn(jwtToken);
 
         this.mockMvc.perform(post("/api/v1/user/login")
                         .with(csrf())
@@ -37,7 +40,7 @@ class LoginControllerTest extends RequestsTest {
                         .content(userJson))
                 .andExpect(status().is(200))
                 .andExpect(content()
-                        .string(containsString("Login successful")))
+                        .string(containsString(jwtTokenJson)))
                 .andDo(document("login/success"));
     }
 
@@ -46,16 +49,13 @@ class LoginControllerTest extends RequestsTest {
         User user = new User("testemail2testemail.com", "invalid");
         String userJson = objectMapper.writeValueAsString(user);
 
-        when(loginService.checkValidity(user)).thenReturn(true);
-        when(loginService.authenticate(user)).thenReturn(false);
+        when(loginService.authenticate(user)).thenReturn(null);
 
         this.mockMvc.perform(post("/api/v1/user/login")
                         .with(csrf())
                         .contentType("application/json")
                         .content(userJson))
                 .andExpect(status().is(401))
-                .andExpect(content()
-                        .string(containsString("Invalid credentials")))
                 .andDo(document("login/failure"));
     }
 }
