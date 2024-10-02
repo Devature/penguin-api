@@ -33,8 +33,6 @@ public class LoginController {
         return jwtToken != null ? ResponseEntity.ok(jwtToken) :
                 ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
-
-
 }
 
 
