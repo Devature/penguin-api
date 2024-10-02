@@ -45,7 +45,7 @@ public class RegisterControllerTest extends RequestsTest {
 
         when(registerService.checkEmailAvailable(user.getEmail())).thenReturn(true);
 
-        when(registerService.registerUser(user)).thenReturn(null);
+        when(registerService.registerUser(user)).thenReturn(RegisterStatus.ACCOUNT_FAILED_TO_CREATE);
 
         this.mockMvc.perform(post("/api/v1/user/registration")
                 .with(csrf())
@@ -62,9 +62,7 @@ public class RegisterControllerTest extends RequestsTest {
         User user = new User("testsmith@example.com", "Password_1");
         String userJson = objectMapper.writeValueAsString(user);
 
-        // TODO: Use H2 for this test since we need a stateful testing. Mock is stateless.
-
-        when(registerService.checkEmailAvailable(user.getEmail())).thenReturn(false);
+        when(registerService.registerUser(user)).thenReturn(RegisterStatus.EMAIL_TAKEN);
 
         this.mockMvc.perform(post("/api/v1/user/registration")
                         .with(csrf())
