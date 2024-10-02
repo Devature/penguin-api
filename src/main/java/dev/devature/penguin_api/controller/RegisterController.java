@@ -1,7 +1,7 @@
 package dev.devature.penguin_api.controller;
 
 import dev.devature.penguin_api.entity.User;
-import dev.devature.penguin_api.enums.RegisterStatus;
+import dev.devature.penguin_api.enums.RegisterResult;
 import dev.devature.penguin_api.service.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,7 @@ public class RegisterController {
      */
     @PostMapping("/registration")
     public ResponseEntity<String> register(@RequestBody User user){
-        RegisterStatus registerServiceStatus = registerService.registerUser(user);
+        RegisterResult registerServiceStatus = registerService.registerUser(user);
 
         switch (registerServiceStatus){
             case EMAIL_TAKEN -> {

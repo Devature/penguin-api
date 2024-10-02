@@ -1,7 +1,7 @@
 package dev.devature.penguin_api.controller;
 
 import dev.devature.penguin_api.entity.User;
-import dev.devature.penguin_api.enums.RegisterStatus;
+import dev.devature.penguin_api.enums.RegisterResult;
 import dev.devature.penguin_api.service.RegisterService;
 
 import org.junit.jupiter.api.Test;
@@ -26,7 +26,7 @@ public class RegisterControllerTest extends RequestsTest {
 
         when(registerService.checkEmailAvailable(user.getEmail())).thenReturn(true);
 
-        when(registerService.registerUser(user)).thenReturn(RegisterStatus.SUCCESS);
+        when(registerService.registerUser(user)).thenReturn(RegisterResult.SUCCESS);
 
         this.mockMvc.perform(post("/api/v1/user/registration")
                         .with(csrf())
@@ -45,7 +45,7 @@ public class RegisterControllerTest extends RequestsTest {
 
         when(registerService.checkEmailAvailable(user.getEmail())).thenReturn(true);
 
-        when(registerService.registerUser(user)).thenReturn(RegisterStatus.ACCOUNT_FAILED_TO_CREATE);
+        when(registerService.registerUser(user)).thenReturn(RegisterResult.ACCOUNT_FAILED_TO_CREATE);
 
         this.mockMvc.perform(post("/api/v1/user/registration")
                 .with(csrf())
@@ -62,7 +62,7 @@ public class RegisterControllerTest extends RequestsTest {
         User user = new User("testsmith@example.com", "Password_1");
         String userJson = objectMapper.writeValueAsString(user);
 
-        when(registerService.registerUser(user)).thenReturn(RegisterStatus.EMAIL_TAKEN);
+        when(registerService.registerUser(user)).thenReturn(RegisterResult.EMAIL_TAKEN);
 
         this.mockMvc.perform(post("/api/v1/user/registration")
                         .with(csrf())
