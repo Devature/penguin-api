@@ -1,6 +1,7 @@
 package dev.devature.penguin_api.controller;
 
 import dev.devature.penguin_api.entity.User;
+import dev.devature.penguin_api.enums.RegisterStatus;
 import dev.devature.penguin_api.service.RegisterService;
 
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,7 @@ public class RegisterControllerTest extends RequestsTest {
 
         when(registerService.checkEmailAvailable(user.getEmail())).thenReturn(true);
 
-        when(registerService.registerUser(user)).thenReturn(user);
+        when(registerService.registerUser(user)).thenReturn(RegisterStatus.SUCCESS);
 
         this.mockMvc.perform(post("/api/v1/user/registration")
                         .with(csrf())
