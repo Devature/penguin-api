@@ -1,0 +1,85 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "penguin-api",
+    "version" : "0.0.1-SNAPSHOT",
+    "title" : "penguin-api"
+  },
+  "host" : "localhost:8080",
+  "tags" : [ ],
+  "schemes" : [ "http" ],
+  "paths" : {
+    "/api/v1/user/login" : {
+      "post" : {
+        "tags" : [ "api" ],
+        "operationId" : "login/failure",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/api_v1_user_login727352477"
+          },
+          "x-examples" : {
+            "application/json" : "{\"id\":null,\"email\":\"agoodtestemail@testemail.com\",\"password\":\"Th1sisvalidpass!\",\"name\":null,\"google_auth_token\":null,\"google_refresh_token\":null,\"microsoft_auth_token\":null,\"microsoft_refresh_token\":null,\"created_at\":null,\"last_access\":null,\"role\":null,\"settings\":null}"
+          }
+        } ],
+        "responses" : {
+          "401" : {
+            "description" : "",
+            "examples" : { }
+          },
+          "200" : {
+            "description" : "",
+            "examples" : {
+              "application/json" : "{\"token\":\"abc123\"}"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/registration" : {
+      "post" : {
+        "tags" : [ "api" ],
+        "operationId" : "registration/failure",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "text/plain;charset=UTF-8" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/api_v1_user_registration-472692862"
+          },
+          "x-examples" : {
+            "application/json" : "{\"id\":null,\"email\":\"johnsmith@example.com\",\"password\":\"Password_1\",\"name\":null,\"google_auth_token\":null,\"google_refresh_token\":null,\"microsoft_auth_token\":null,\"microsoft_refresh_token\":null,\"created_at\":null,\"last_access\":null,\"role\":null,\"settings\":null}"
+          }
+        } ],
+        "responses" : {
+          "400" : {
+            "description" : "",
+            "examples" : {
+              "text/plain;charset=UTF-8" : "Registration unsuccessful. Failed to create an account."
+            }
+          },
+          "201" : {
+            "description" : "",
+            "examples" : {
+              "text/plain;charset=UTF-8" : "Registration successful."
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "api_v1_user_registration-472692862" : {
+      "example" : "{\"id\":null,\"email\":\"johnsmith@example.com\",\"password\":\"Password_1\",\"name\":null,\"google_auth_token\":null,\"google_refresh_token\":null,\"microsoft_auth_token\":null,\"microsoft_refresh_token\":null,\"created_at\":null,\"last_access\":null,\"role\":null,\"settings\":null}"
+    },
+    "api_v1_user_login727352477" : {
+      "example" : "{\"id\":null,\"email\":\"agoodtestemail@testemail.com\",\"password\":\"Th1sisvalidpass!\",\"name\":null,\"google_auth_token\":null,\"google_refresh_token\":null,\"microsoft_auth_token\":null,\"microsoft_refresh_token\":null,\"created_at\":null,\"last_access\":null,\"role\":null,\"settings\":null}"
+    }
+  }
+}
