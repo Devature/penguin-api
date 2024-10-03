@@ -1,6 +1,7 @@
 package dev.devature.penguin_api.service;
 
 import dev.devature.penguin_api.entity.User;
+import dev.devature.penguin_api.enums.RegisterResult;
 import dev.devature.penguin_api.repository.UserRepository;
 import dev.devature.penguin_api.utils.EmailPasswordValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,19 +26,32 @@ public class RegisterService {
      * @return User {@code User} object if the account was successfully add or
      * {@code null} if it failed to add or meet requirements.
      */
-    public User registerUser(User user){
+    public RegisterResult registerUser(User user){
         boolean isEmailValid = EmailPasswordValidationUtils.isValidEmail(user.getEmail());
         boolean isPasswordValid = EmailPasswordValidationUtils.isValidPassword(user.getPassword());
         boolean isEmailAvailable = checkEmailAvailable(user.getEmail());
 
-        if(!isEmailValid || !isPasswordValid || !isEmailAvailable){
-            return null;
+        if(!isEmailAvailable){
+            return RegisterResult.EMAIL_TAKEN;
+        }
+
+        if(!isEmailValid || !isPasswordValid){
+            return RegisterResult.INVALID_ACCOUNT_INFO;
         }
 
         String hashedPassword = this.passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
 
-        return userRepository.save(user);
+        User dbUser = userRepository.save(user);
+
+        boolean isValid = dbUser.getId() != null
+                && dbUser.getId() >= 0
+                && dbUser.getEmail() != null
+                && !dbUser.getEmail().isEmpty()
+                && dbUser.getPassword() != null
+                && !dbUser.getPassword().isEmpty();
+
+        return isValid ? RegisterResult.SUCCESS : RegisterResult.ACCOUNT_FAILED_TO_CREATE;
     }
 
     /**

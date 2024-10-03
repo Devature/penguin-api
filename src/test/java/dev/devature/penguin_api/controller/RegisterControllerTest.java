@@ -1,6 +1,7 @@
 package dev.devature.penguin_api.controller;
 
 import dev.devature.penguin_api.entity.User;
+import dev.devature.penguin_api.enums.RegisterResult;
 import dev.devature.penguin_api.service.RegisterService;
 
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,9 @@ public class RegisterControllerTest extends RequestsTest {
         User user = new User("johnsmith@example.com", "Password_1");
         String userJson = objectMapper.writeValueAsString(user);
 
-        when(registerService.registerUser(user)).thenReturn(user);
+        when(registerService.checkEmailAvailable(user.getEmail())).thenReturn(true);
+
+        when(registerService.registerUser(user)).thenReturn(RegisterResult.SUCCESS);
 
         this.mockMvc.perform(post("/api/v1/user/registration")
                         .with(csrf())
@@ -40,7 +43,9 @@ public class RegisterControllerTest extends RequestsTest {
         User user = new User("johnsmith@example.com", "Password_1");
         String userJson = objectMapper.writeValueAsString(user);
 
-        when(registerService.registerUser(user)).thenReturn(null);
+        when(registerService.checkEmailAvailable(user.getEmail())).thenReturn(true);
+
+        when(registerService.registerUser(user)).thenReturn(RegisterResult.ACCOUNT_FAILED_TO_CREATE);
 
         this.mockMvc.perform(post("/api/v1/user/registration")
                 .with(csrf())
@@ -49,6 +54,23 @@ public class RegisterControllerTest extends RequestsTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content()
                         .string(containsString("Registration unsuccessful. Failed to create an account.")))
+                .andDo(document("registration/failure"));
+    }
+
+    @Test
+    public void registerUser_WithEmailConflict() throws Exception {
+        User user = new User("testsmith@example.com", "Password_1");
+        String userJson = objectMapper.writeValueAsString(user);
+
+        when(registerService.registerUser(user)).thenReturn(RegisterResult.EMAIL_TAKEN);
+
+        this.mockMvc.perform(post("/api/v1/user/registration")
+                        .with(csrf())
+                        .contentType("application/json")
+                        .content(userJson))
+                .andExpect(status().isConflict())
+                .andExpect(content()
+                        .string(containsString("Someone is already using that email")))
                 .andDo(document("registration/failure"));
     }
 }

@@ -79,8 +79,6 @@ class LoginServiceTest {
         verify(passwordEncoder).matches(user.getPassword(), hashedPassword);
     }
 
-
-
     @Test
     void testAuthenticate_Failure_UserNotFound() {
         User user = new User("notfound@example.com", "SomeP@ssw0rd!");
