@@ -32,14 +32,14 @@ public class RegisterController {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("Someone is already using that email.");
             }
             case INVALID_ACCOUNT_INFO -> {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("Account information is invalid.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Account information is invalid.");
+            } case SUCCESS -> {
+                return ResponseEntity.status(HttpStatus.CREATED).body("Registration successful.");
             }
-            case ACCOUNT_FAILED_TO_CREATE -> {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body("Registration unsuccessful. Failed to create an account.");
+            default -> {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("Unexpected server error.");
             }
         }
-
-        return ResponseEntity.status(HttpStatus.CREATED).body("Registration successful.");
     }
 }
