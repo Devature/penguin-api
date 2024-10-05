@@ -39,7 +39,7 @@ public class RegisterControllerTest extends RequestsTest {
     }
 
     @Test
-    public void register_WithUserFailed() throws Exception {
+    public void register_WithUserTotalFailed() throws Exception {
         User user = new User("johnsmith@example.com", "Password_1");
         String userJson = objectMapper.writeValueAsString(user);
 
@@ -54,6 +54,25 @@ public class RegisterControllerTest extends RequestsTest {
                 .andExpect(status().isInternalServerError())
                 .andExpect(content()
                         .string(containsString("Unexpected server error.")))
+                .andDo(document("registration/failure"));
+    }
+
+    @Test
+    public void register_WithBadData() throws Exception {
+        User user = new User("johnsmith@example.com", "Password1");
+        String userJson = objectMapper.writeValueAsString(user);
+
+        when(registerService.checkEmailAvailable(user.getEmail())).thenReturn(true);
+
+        when(registerService.registerUser(user)).thenReturn(RegisterResult.INVALID_ACCOUNT_INFO);
+
+        this.mockMvc.perform(post("/api/v1/user/registration")
+                        .with(csrf())
+                        .contentType("application/json")
+                        .content(userJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(content()
+                        .string(containsString("Account information is invalid.")))
                 .andDo(document("registration/failure"));
     }
 
