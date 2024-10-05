@@ -1,10 +1,14 @@
 package dev.devature.penguin_api.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.sql.Timestamp;
 import java.util.Objects;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "user")
 public class User {
@@ -62,102 +66,6 @@ public class User {
         this.created_at = created_at;
         this.last_access = last_access;
         this.role = role;
-        this.settings = settings;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getGoogle_auth_token() {
-        return google_auth_token;
-    }
-
-    public void setGoogle_auth_token(String google_auth_token) {
-        this.google_auth_token = google_auth_token;
-    }
-
-    public String getGoogle_refresh_token() {
-        return google_refresh_token;
-    }
-
-    public void setGoogle_refresh_token(String google_refresh_token) {
-        this.google_refresh_token = google_refresh_token;
-    }
-
-    public String getMicrosoft_auth_token() {
-        return microsoft_auth_token;
-    }
-
-    public void setMicrosoft_auth_token(String microsoft_auth_token) {
-        this.microsoft_auth_token = microsoft_auth_token;
-    }
-
-    public String getMicrosoft_refresh_token() {
-        return microsoft_refresh_token;
-    }
-
-    public void setMicrosoft_refresh_token(String microsoft_refresh_token) {
-        this.microsoft_refresh_token = microsoft_refresh_token;
-    }
-
-    public Timestamp getCreated_at() {
-        return created_at;
-    }
-
-    public void setCreated_at(Timestamp created_at) {
-        this.created_at = created_at;
-    }
-
-    public Timestamp getLast_access() {
-        return last_access;
-    }
-
-    public void setLast_access(Timestamp last_access) {
-        this.last_access = last_access;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public String getSettings() {
-        return settings;
-    }
-
-    public void setSettings(String settings) {
         this.settings = settings;
     }
 

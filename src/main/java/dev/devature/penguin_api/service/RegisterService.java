@@ -51,7 +51,7 @@ public class RegisterService {
                 && dbUser.getPassword() != null
                 && !dbUser.getPassword().isEmpty();
 
-        return isValid ? RegisterResult.SUCCESS : RegisterResult.ACCOUNT_FAILED_TO_CREATE;
+        return isValid ? RegisterResult.SUCCESS : RegisterResult.UNKNOWN_ERROR;
     }
 
     /**
