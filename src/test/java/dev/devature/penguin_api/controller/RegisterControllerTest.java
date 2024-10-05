@@ -51,9 +51,10 @@ public class RegisterControllerTest extends RequestsTest {
                 .with(csrf())
                 .contentType("application/json")
                 .content(userJson))
-                .andExpect(status().isInternalServerError())
+                .andExpect(status().is(422))
                 .andExpect(content()
-                        .string(containsString("Unexpected server error.")))
+                        .string(containsString("Invalid registration data. " +
+                                "Please review your input and try again.")))
                 .andDo(document("registration/failure"));
     }
 

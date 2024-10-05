@@ -38,8 +38,8 @@ public class RegisterController {
                 return ResponseEntity.status(HttpStatus.CREATED).body("Registration successful.");
             }
             default -> {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body("Unexpected server error.");
+                return ResponseEntity.status(422)
+                        .body("Invalid registration data. Please review your input and try again.");
             }
         }
     }
