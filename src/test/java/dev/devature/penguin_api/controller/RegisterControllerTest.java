@@ -20,7 +20,7 @@ public class RegisterControllerTest extends RequestsTest {
     private RegisterService registerService;
 
     @Test
-    public void registerUserSucceed() throws Exception {
+    public void register_WithUserSucceed() throws Exception {
         User user = new User("johnsmith@example.com", "Password_1");
         String userJson = objectMapper.writeValueAsString(user);
 
@@ -39,21 +39,21 @@ public class RegisterControllerTest extends RequestsTest {
     }
 
     @Test
-    public void registerUserFailed() throws Exception {
+    public void register_WithUserFailed() throws Exception {
         User user = new User("johnsmith@example.com", "Password_1");
         String userJson = objectMapper.writeValueAsString(user);
 
         when(registerService.checkEmailAvailable(user.getEmail())).thenReturn(true);
 
-        when(registerService.registerUser(user)).thenReturn(RegisterResult.ACCOUNT_FAILED_TO_CREATE);
+        when(registerService.registerUser(user)).thenReturn(RegisterResult.UNKNOWN_ERROR);
 
         this.mockMvc.perform(post("/api/v1/user/registration")
                 .with(csrf())
                 .contentType("application/json")
                 .content(userJson))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isInternalServerError())
                 .andExpect(content()
-                        .string(containsString("Registration unsuccessful. Failed to create an account.")))
+                        .string(containsString("Unexpected server error.")))
                 .andDo(document("registration/failure"));
     }
 

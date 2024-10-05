@@ -33,7 +33,8 @@ public class RegisterController {
             }
             case INVALID_ACCOUNT_INFO -> {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Account information is invalid.");
-            } case SUCCESS -> {
+            }
+            case SUCCESS -> {
                 return ResponseEntity.status(HttpStatus.CREATED).body("Registration successful.");
             }
             default -> {
