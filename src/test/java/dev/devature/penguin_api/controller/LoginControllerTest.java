@@ -4,22 +4,17 @@ import dev.devature.penguin_api.entity.User;
 import dev.devature.penguin_api.model.JwtToken;
 import dev.devature.penguin_api.service.LoginService;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 
-@SpringBootTest
-@ExtendWith(MockitoExtension.class)
 class LoginControllerTest extends RequestsTest {
     @MockBean
     private LoginService loginService;
