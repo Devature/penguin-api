@@ -1,11 +1,14 @@
 package dev.devature.penguin_api.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Timestamp;
 import java.util.Objects;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -20,32 +23,42 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(nullable = false)
     private String password;
 
     private String name;
 
+    @JsonIgnore
     private String google_auth_token;
 
+    @JsonIgnore
     private String google_refresh_token;
 
+    @JsonIgnore
     private String microsoft_auth_token;
 
+    @JsonIgnore
     private String microsoft_refresh_token;
 
+    @JsonIgnore
     private Timestamp created_at;
 
+    @JsonIgnore
     private Timestamp last_access;
 
     private String role;
 
     private String settings;
 
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "members")
+    private Set<Organization> organizations;
 
     /**
      * For the use of MockMVC Jackson testing.
      */
-    User() {}
+    public User() {}
 
     public User(String email, String password) {
         this.email = email;

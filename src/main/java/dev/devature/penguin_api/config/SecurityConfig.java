@@ -5,30 +5,13 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
 
 import javax.crypto.SecretKey;
 
 @Configuration
-@EnableWebSecurity
 public class SecurityConfig {
-
-    /**
-     * Overrides Spring Security default, which redirects all unauthenticated
-     * requests to /login, to permit all requests to any endpoint
-     */
-    @Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests((requests) -> requests
-				.requestMatchers("/**").permitAll()
-			);
-
-		return http.build();
-	}
 
     @Value("${argon2.saltLength}")
     private int saltLength;
