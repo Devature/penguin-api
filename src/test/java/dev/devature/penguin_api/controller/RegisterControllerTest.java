@@ -48,7 +48,6 @@ public class RegisterControllerTest extends RequestsTest {
         when(registerService.registerUser(user)).thenReturn(RegisterResult.UNKNOWN_ERROR);
 
         this.mockMvc.perform(post("/api/v1/user/registration")
-                .with(csrf())
                 .contentType("application/json")
                 .content(userJson))
                 .andExpect(status().is(422))
@@ -68,7 +67,6 @@ public class RegisterControllerTest extends RequestsTest {
         when(registerService.registerUser(user)).thenReturn(RegisterResult.INVALID_ACCOUNT_INFO);
 
         this.mockMvc.perform(post("/api/v1/user/registration")
-                        .with(csrf())
                         .contentType("application/json")
                         .content(userJson))
                 .andExpect(status().isBadRequest())
@@ -85,7 +83,6 @@ public class RegisterControllerTest extends RequestsTest {
         when(registerService.registerUser(user)).thenReturn(RegisterResult.EMAIL_TAKEN);
 
         this.mockMvc.perform(post("/api/v1/user/registration")
-                        .with(csrf())
                         .contentType("application/json")
                         .content(userJson))
                 .andExpect(status().isConflict())
