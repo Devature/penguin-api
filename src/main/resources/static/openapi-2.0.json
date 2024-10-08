@@ -9,6 +9,59 @@
   "tags" : [ ],
   "schemes" : [ "http" ],
   "paths" : {
+    "/api/v1/issue/{id}" : {
+      "delete" : {
+        "tags" : [ "api" ],
+        "operationId" : "issue/failed",
+        "produces" : [ "text/plain;charset=UTF-8" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "404" : {
+            "description" : "",
+            "examples" : {
+              "text/plain;charset=UTF-8" : "Failed to find issue."
+            }
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "api" ],
+        "operationId" : "issue/success",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "text/plain;charset=UTF-8" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/api_v1_issue_id951123312"
+          },
+          "x-examples" : {
+            "application/json" : "{\"id\":null,\"column_id\":null,\"title\":\"Updated Title\",\"summary\":null,\"story_points\":null,\"status_id\":null,\"assignee_id\":null,\"due_date\":null,\"parent_issue_id\":null,\"created_at\":null,\"updated_at\":null,\"created_by\":null}"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "examples" : {
+              "text/plain;charset=UTF-8" : "Issue successfully updated."
+            }
+          }
+        }
+      }
+    },
     "/api/v1/user/login" : {
       "post" : {
         "tags" : [ "api" ],
@@ -58,10 +111,10 @@
           }
         } ],
         "responses" : {
-          "400" : {
+          "409" : {
             "description" : "",
             "examples" : {
-              "text/plain;charset=UTF-8" : "Registration unsuccessful. Failed to create an account."
+              "text/plain;charset=UTF-8" : "Someone is already using that email."
             }
           },
           "201" : {
@@ -75,6 +128,9 @@
     }
   },
   "definitions" : {
+    "api_v1_issue_id951123312" : {
+      "example" : "{\"id\":null,\"column_id\":null,\"title\":\"Updated Title\",\"summary\":null,\"story_points\":null,\"status_id\":null,\"assignee_id\":null,\"due_date\":null,\"parent_issue_id\":null,\"created_at\":null,\"updated_at\":null,\"created_by\":null}"
+    },
     "api_v1_user_registration-472692862" : {
       "example" : "{\"id\":null,\"email\":\"johnsmith@example.com\",\"password\":\"Password_1\",\"name\":null,\"google_auth_token\":null,\"google_refresh_token\":null,\"microsoft_auth_token\":null,\"microsoft_refresh_token\":null,\"created_at\":null,\"last_access\":null,\"role\":null,\"settings\":null}"
     },
