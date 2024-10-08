@@ -88,11 +88,13 @@ public class IssueService {
      * @return {@code True} there is an issue with the input of the data or {@code False} if the input of data
      * is complete.
      */
-    private boolean checkIfBadData(Issue issue){
-        if(issue.getTitle().isEmpty() || issue.getStatus_id() == null || issue.getColumn_id() != null){
-            return true;
-        }
-        return false;
+    public boolean checkIfBadData(Issue issue){
+        return     issue == null
+                || issue.getTitle() == null
+                || issue.getTitle().isEmpty()
+                || issue.getStatus_id() == null
+                || issue.getColumn_id() == null;
+
     }
 
     /**

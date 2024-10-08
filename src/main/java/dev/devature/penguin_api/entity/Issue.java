@@ -17,6 +17,7 @@ public class Issue {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(nullable = false)
     private Long column_id;
 
     @Column(nullable = false, unique = true)
@@ -37,9 +38,10 @@ public class Issue {
     // For MockMVC Jackson
     public Issue() { }
 
-    public Issue(Long id, Long column_id) {
+    public Issue(Long id, Long column_id, String title) {
         this.id = id;
         this.column_id = column_id;
+        this.title = title;
     }
 
     public Issue(Long id, Long column_id, String title, String summary, Integer story_points, Long status_id,

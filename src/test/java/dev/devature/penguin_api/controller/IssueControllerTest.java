@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -38,7 +37,7 @@ public class IssueControllerTest extends RequestsTest {
 
     @Test
     public void testIssue_CreateSuccess() throws Exception {
-        Issue issue = new Issue(0L, 2L);
+        Issue issue = new Issue(0L, 2L, "Test Data");
 
         when(issueService.createIssue(issue)).thenReturn(IssueResult.CREATED);
 
@@ -53,7 +52,7 @@ public class IssueControllerTest extends RequestsTest {
 
     @Test
     public void testIssue_CreateFailed() throws Exception {
-        Issue issue = new Issue(0L, 2L);
+        Issue issue = new Issue(0L, 2L, "Test Data");
 
         when(issueService.createIssue(issue)).thenReturn(IssueResult.BAD_DATA);
 
