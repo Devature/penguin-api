@@ -23,7 +23,7 @@ public class IssueController {
      * @param issue Take in a RequestBody with the issue object created.
      * @return ResponseEntity with status and body based on the result of service.
      */
-    @PostMapping("")
+    @PostMapping("/new")
     public ResponseEntity<String> postIssue(@RequestBody Issue issue){
         IssueResult issueResult = issueService.createIssue(issue);
         return stringResponseEntity(issueResult);
@@ -50,10 +50,20 @@ public class IssueController {
         Issue issue = issueService.getIssue(id);
 
         if(issue == null){
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.notFound().build();
         }
 
         return ResponseEntity.ok(issue);
+    }
+
+    /**
+     * @param id Takes in a Path variable with the issue ID to be updated.
+     * @return ResponseEntity with status and body based on the result of service.
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteIssue(@PathVariable Long id){
+        IssueResult issueResult = issueService.deleteIssue(id);
+        return stringResponseEntity(issueResult);
     }
 
     /**
@@ -62,10 +72,13 @@ public class IssueController {
      */
     private ResponseEntity<String> stringResponseEntity(IssueResult result){
         switch (result){
-            case SUCCESS -> {
+            case CREATED -> {
                 return ResponseEntity.status(HttpStatus.CREATED).body("Issue successfully created.");
             }
-            case SUCCESS_UPDATE -> {
+            case NOT_FOUND -> {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to find issue.");
+            }
+            case SUCCESS -> {
                 return ResponseEntity.ok("Issue successfully updated.");
             }
             case BAD_DATA -> {

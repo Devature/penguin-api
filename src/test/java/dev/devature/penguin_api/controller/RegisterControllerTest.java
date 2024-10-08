@@ -6,6 +6,7 @@ import dev.devature.penguin_api.service.RegisterService;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.when;
@@ -30,7 +31,7 @@ public class RegisterControllerTest extends RequestsTest {
 
         this.mockMvc.perform(post("/api/v1/user/registration")
                         .with(csrf())
-                        .contentType("application/json")
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(userJson))
                 .andExpect(status().is(201))
                 .andExpect(content()
@@ -48,7 +49,7 @@ public class RegisterControllerTest extends RequestsTest {
         when(registerService.registerUser(user)).thenReturn(RegisterResult.UNKNOWN_ERROR);
 
         this.mockMvc.perform(post("/api/v1/user/registration")
-                .contentType("application/json")
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(userJson))
                 .andExpect(status().is(422))
                 .andExpect(content()
@@ -67,7 +68,7 @@ public class RegisterControllerTest extends RequestsTest {
         when(registerService.registerUser(user)).thenReturn(RegisterResult.INVALID_ACCOUNT_INFO);
 
         this.mockMvc.perform(post("/api/v1/user/registration")
-                        .contentType("application/json")
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(userJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(content()
@@ -83,7 +84,7 @@ public class RegisterControllerTest extends RequestsTest {
         when(registerService.registerUser(user)).thenReturn(RegisterResult.EMAIL_TAKEN);
 
         this.mockMvc.perform(post("/api/v1/user/registration")
-                        .contentType("application/json")
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(userJson))
                 .andExpect(status().isConflict())
                 .andExpect(content()

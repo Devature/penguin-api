@@ -30,7 +30,7 @@ public class IssueService {
 
         issueRepository.save(issue);
 
-        return IssueResult.SUCCESS;
+        return IssueResult.CREATED;
     }
 
     /**
@@ -41,7 +41,7 @@ public class IssueService {
     public IssueResult updateIssue(Issue issue, Long id){
         Issue returnIssue = checkIfIssueExist(id);
 
-        if(returnIssue == null){
+        if(returnIssue == null || checkIfBadData(issue)){
             return IssueResult.BAD_DATA;
         }
 
@@ -62,9 +62,8 @@ public class IssueService {
         boolean isValid = returnDatabaseIssue.getId() != null
                 && !returnDatabaseIssue.getTitle().isEmpty();
 
-        return isValid ? IssueResult.SUCCESS_UPDATE : IssueResult.UNKNOWN_ERROR;
+        return isValid ? IssueResult.SUCCESS : IssueResult.UNKNOWN_ERROR;
     }
-
 
     /**
      * @param id Take in an ID to return an issue from
@@ -74,13 +73,23 @@ public class IssueService {
         return checkIfIssueExist(id);
     }
 
+    public IssueResult deleteIssue(Long id){
+        int rowsDelete = issueRepository.removeById(id);
+
+        if(rowsDelete == 0){
+            return IssueResult.NOT_FOUND;
+        }
+
+        return IssueResult.SUCCESS;
+    }
+
     /**
      * @param issue Take in a {@code Issue} object to process the request.
      * @return {@code True} there is an issue with the input of the data or {@code False} if the input of data
      * is complete.
      */
     private boolean checkIfBadData(Issue issue){
-        if(issue.getTitle().isEmpty() || issue.getStatus_id() == null){
+        if(issue.getTitle().isEmpty() || issue.getStatus_id() == null || issue.getColumn_id() != null){
             return true;
         }
         return false;

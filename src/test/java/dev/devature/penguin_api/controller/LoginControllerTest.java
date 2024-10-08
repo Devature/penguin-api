@@ -6,6 +6,7 @@ import dev.devature.penguin_api.service.LoginService;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.when;
@@ -31,7 +32,7 @@ class LoginControllerTest extends RequestsTest {
 
         this.mockMvc.perform(post("/api/v1/user/login")
                         .with(csrf())
-                        .contentType("application/json")
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(userJson))
                 .andExpect(status().is(200))
                 .andExpect(content()
@@ -48,7 +49,7 @@ class LoginControllerTest extends RequestsTest {
 
         this.mockMvc.perform(post("/api/v1/user/login")
                         .with(csrf())
-                        .contentType("application/json")
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(userJson))
                 .andExpect(status().is(401))
                 .andDo(document("login/failure"));

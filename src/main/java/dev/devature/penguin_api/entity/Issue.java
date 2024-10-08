@@ -34,8 +34,12 @@ public class Issue {
     private Timestamp updated_at;
     private Long created_by;
 
-    public Issue(Long id) {
+    // For MockMVC Jackson
+    public Issue() { }
+
+    public Issue(Long id, Long column_id) {
         this.id = id;
+        this.column_id = column_id;
     }
 
     public Issue(Long id, Long column_id, String title, String summary, Integer story_points, Long status_id,
