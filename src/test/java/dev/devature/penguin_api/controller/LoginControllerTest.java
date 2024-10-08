@@ -3,17 +3,16 @@ package dev.devature.penguin_api.controller;
 import dev.devature.penguin_api.entity.User;
 import dev.devature.penguin_api.model.JwtToken;
 import dev.devature.penguin_api.service.LoginService;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 
 class LoginControllerTest extends RequestsTest {
     @MockBean
@@ -22,7 +21,9 @@ class LoginControllerTest extends RequestsTest {
     @Test
     public void loginSucceed() throws Exception {
         User user = new User("agoodtestemail@testemail.com","Th1sisvalidpass!");
-        String userJson = objectMapper.writeValueAsString(user);
+        String userJson = new JSONObject()
+                .put("email", user.getEmail())
+                .put("password", user.getPassword()).toString();
 
         JwtToken jwtToken = new JwtToken("abc123");
         String jwtTokenJson = objectMapper.writeValueAsString(jwtToken);
@@ -30,7 +31,6 @@ class LoginControllerTest extends RequestsTest {
         when(loginService.authenticate(user)).thenReturn(jwtToken);
 
         this.mockMvc.perform(post("/api/v1/user/login")
-                        .with(csrf())
                         .contentType("application/json")
                         .content(userJson))
                 .andExpect(status().is(200))
@@ -42,12 +42,13 @@ class LoginControllerTest extends RequestsTest {
     @Test
     public void loginFailure() throws Exception {
         User user = new User("testemail2testemail.com", "invalid");
-        String userJson = objectMapper.writeValueAsString(user);
+        String userJson = new JSONObject()
+                .put("email", user.getEmail())
+                .put("password", user.getPassword()).toString();
 
         when(loginService.authenticate(user)).thenReturn(null);
 
         this.mockMvc.perform(post("/api/v1/user/login")
-                        .with(csrf())
                         .contentType("application/json")
                         .content(userJson))
                 .andExpect(status().is(401))
