@@ -20,10 +20,10 @@
           "name" : "",
           "required" : false,
           "schema" : {
-            "$ref" : "#/definitions/api_v1_user_login727352477"
+            "$ref" : "#/definitions/api_v1_user_login-143394385"
           },
           "x-examples" : {
-            "application/json" : "{\"id\":null,\"email\":\"agoodtestemail@testemail.com\",\"password\":\"Th1sisvalidpass!\",\"name\":null,\"google_auth_token\":null,\"google_refresh_token\":null,\"microsoft_auth_token\":null,\"microsoft_refresh_token\":null,\"created_at\":null,\"last_access\":null,\"role\":null,\"settings\":null}"
+            "application/json" : "{\"password\":\"Th1sisvalidpass!\",\"email\":\"agoodtestemail@testemail.com\"}"
           }
         } ],
         "responses" : {
@@ -51,17 +51,17 @@
           "name" : "",
           "required" : false,
           "schema" : {
-            "$ref" : "#/definitions/api_v1_user_registration-472692862"
+            "$ref" : "#/definitions/api_v1_user_registration-905320256"
           },
           "x-examples" : {
-            "application/json" : "{\"id\":null,\"email\":\"johnsmith@example.com\",\"password\":\"Password_1\",\"name\":null,\"google_auth_token\":null,\"google_refresh_token\":null,\"microsoft_auth_token\":null,\"microsoft_refresh_token\":null,\"created_at\":null,\"last_access\":null,\"role\":null,\"settings\":null}"
+            "application/json" : "{\"password\":\"Password_1\",\"email\":\"johnsmith@example.com\"}"
           }
         } ],
         "responses" : {
-          "400" : {
+          "409" : {
             "description" : "",
             "examples" : {
-              "text/plain;charset=UTF-8" : "Registration unsuccessful. Failed to create an account."
+              "text/plain;charset=UTF-8" : "Someone is already using that email."
             }
           },
           "201" : {
@@ -75,11 +75,11 @@
     }
   },
   "definitions" : {
-    "api_v1_user_registration-472692862" : {
-      "example" : "{\"id\":null,\"email\":\"johnsmith@example.com\",\"password\":\"Password_1\",\"name\":null,\"google_auth_token\":null,\"google_refresh_token\":null,\"microsoft_auth_token\":null,\"microsoft_refresh_token\":null,\"created_at\":null,\"last_access\":null,\"role\":null,\"settings\":null}"
+    "api_v1_user_registration-905320256" : {
+      "example" : "{\"password\":\"Password_1\",\"email\":\"johnsmith@example.com\"}"
     },
-    "api_v1_user_login727352477" : {
-      "example" : "{\"id\":null,\"email\":\"agoodtestemail@testemail.com\",\"password\":\"Th1sisvalidpass!\",\"name\":null,\"google_auth_token\":null,\"google_refresh_token\":null,\"microsoft_auth_token\":null,\"microsoft_refresh_token\":null,\"created_at\":null,\"last_access\":null,\"role\":null,\"settings\":null}"
+    "api_v1_user_login-143394385" : {
+      "example" : "{\"password\":\"Th1sisvalidpass!\",\"email\":\"agoodtestemail@testemail.com\"}"
     }
   }
 }
