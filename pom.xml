@@ -132,6 +132,11 @@
 			<artifactId>restdocs-api-spec-mockmvc</artifactId>
 			<version>0.19.4</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.restdocs</groupId>
+			<artifactId>spring-restdocs-mockmvc</artifactId>
+			<scope>test</scope>
+		</dependency>
 
 		<!-- Adds the swagger UI which consumes the OpenAPI JSON -->
 		<dependency>

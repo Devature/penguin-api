@@ -28,14 +28,14 @@ public class RegisterController {
         RegisterResult registerServiceStatus = registerService.registerUser(user);
 
         switch (registerServiceStatus){
+            case SUCCESS -> {
+                return ResponseEntity.status(HttpStatus.CREATED).body("Registration successful.");
+            }
             case EMAIL_TAKEN -> {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("Someone is already using that email.");
             }
             case INVALID_ACCOUNT_INFO -> {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Account information is invalid.");
-            }
-            case SUCCESS -> {
-                return ResponseEntity.status(HttpStatus.CREATED).body("Registration successful.");
+                return ResponseEntity.badRequest().body("Account information is invalid.");
             }
             default -> {
                 return ResponseEntity.status(422)
