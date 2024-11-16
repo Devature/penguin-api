@@ -2,6 +2,7 @@ package dev.devature.penguin_api.controller;
 
 import dev.devature.penguin_api.entity.Issue;
 import dev.devature.penguin_api.enums.IssueResult;
+import dev.devature.penguin_api.interceptor.AuthenticationInterceptor;
 import dev.devature.penguin_api.service.IssueService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,12 +28,20 @@ public class IssueControllerTest extends RequestsTest {
     @MockBean
     private IssueService issueService;
 
+    @MockBean
+    private AuthenticationInterceptor authInterceptor;
+
     @BeforeEach
     public void setUp(WebApplicationContext webApplicationContext,
                       RestDocumentationContextProvider restDocumentation) {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .apply(documentationConfiguration(restDocumentation))
                 .build();
+        try {
+            when(authInterceptor.preHandle(any(), any(), any())).thenReturn(true);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test

@@ -20,6 +20,9 @@ public class Issue {
     @Column(nullable = false)
     private Long column_id;
 
+    @Column(nullable = false)
+    private Long organization_id;
+
     @Column(nullable = false, unique = true)
     private String title;
     private String summary;

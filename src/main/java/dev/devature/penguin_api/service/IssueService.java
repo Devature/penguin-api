@@ -3,6 +3,7 @@ package dev.devature.penguin_api.service;
 import dev.devature.penguin_api.entity.Issue;
 import dev.devature.penguin_api.enums.IssueResult;
 import dev.devature.penguin_api.repository.IssueRepository;
+import dev.devature.penguin_api.repository.OrganizationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,10 +14,12 @@ import java.util.Optional;
 @Transactional
 public class IssueService {
     private IssueRepository issueRepository;
+    private OrganizationRepository organizationRepository;
 
     @Autowired
-    public IssueService(IssueRepository issueRepository){
+    public IssueService(IssueRepository issueRepository, OrganizationRepository organizationRepository){
         this.issueRepository = issueRepository;
+        this.organizationRepository = organizationRepository;
     }
 
     /**
@@ -26,6 +29,10 @@ public class IssueService {
     public IssueResult createIssue(Issue issue){
         if(checkIfBadData(issue)){
             return IssueResult.BAD_DATA;
+        }
+
+        if(!checkAuthorization(issue)){
+            return IssueResult.NOT_AUTHORIZED;
         }
 
         issueRepository.save(issue);
@@ -104,5 +111,19 @@ public class IssueService {
     private Issue checkIfIssueExist(Long id){
         Optional<Issue> issueOptional = issueRepository.findById(id);
         return issueOptional.orElse(null);
+    }
+
+
+    /**
+     * @param issue Take in an issue with all the information to process permission levels.
+     * @return {@code True} if the person is authorized to create issue, or {@code False} if they do not
+     * have authorization to create an issue.
+     */
+    private boolean checkAuthorization(Issue issue){
+        long orgID = issue.getOrganization_id();
+        long userID = issue.getCreated_by();
+
+
+        return false;
     }
 }

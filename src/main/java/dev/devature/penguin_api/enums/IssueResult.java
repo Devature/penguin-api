@@ -5,5 +5,6 @@ public enum IssueResult {
     NOT_FOUND,
     CREATED,
     SUCCESS,
-    UNKNOWN_ERROR
+    UNKNOWN_ERROR,
+    NOT_AUTHORIZED
 }

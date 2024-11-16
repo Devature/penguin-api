@@ -84,6 +84,10 @@ public class IssueController {
             case BAD_DATA -> {
                 return ResponseEntity.badRequest().body("Issue information is invalid.");
             }
+            case NOT_AUTHORIZED -> {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("You do not have permission for that.");
+            }
             default -> {
                 return ResponseEntity.status(422)
                         .body("Invalid issue data. Please review your input and try again.");
