@@ -62,7 +62,7 @@ public class IssueService {
         returnIssue.setCreated_at(issue.getCreated_at());
         returnIssue.setParent_issue_id(issue.getParent_issue_id());
         returnIssue.setUpdated_at(issue.getUpdated_at());
-        returnIssue.setCreated_by(issue.getCreated_by());
+        returnIssue.setCreatedByID(issue.getCreatedByID());
 
         Issue returnDatabaseIssue = issueRepository.save(returnIssue);
 
@@ -101,7 +101,6 @@ public class IssueService {
                 || issue.getTitle().isEmpty()
                 || issue.getStatus_id() == null
                 || issue.getColumn_id() == null;
-
     }
 
     /**
@@ -121,9 +120,8 @@ public class IssueService {
      */
     private boolean checkAuthorization(Issue issue){
         long orgID = issue.getOrganization_id();
-        long userID = issue.getCreated_by();
+        long userID = issue.getCreatedByID();
 
-
-        return false;
+        return organizationRepository.existsByIdAndMembersId(orgID, userID);
     }
 }

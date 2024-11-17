@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.sql.Timestamp;
 import java.util.Objects;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -13,9 +14,16 @@ import java.util.Objects;
 @Table(name="issue")
 public class Issue {
     @Id
-    @Column(name="id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @ManyToMany
+    @JoinTable(
+            name = "issue_label",
+            joinColumns = @JoinColumn(name = "issue_id"),
+            inverseJoinColumns = @JoinColumn(name ="label_id")
+    )
+    private Set<Label> labels;
 
     @Column(nullable = false)
     private Long column_id;
@@ -33,10 +41,12 @@ public class Issue {
     private Timestamp due_date;
     private Long parent_issue_id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private Timestamp created_at;
     private Timestamp updated_at;
-    private Long created_by;
+
+    @Column(nullable = false, name="created_by")
+    private Long createdByID;
 
     // For MockMVC Jackson
     public Issue() { }
@@ -61,7 +71,7 @@ public class Issue {
         this.parent_issue_id = parent_issue_id;
         this.created_at = created_at;
         this.updated_at = updated_at;
-        this.created_by = created_by;
+        this.createdByID = created_by;
     }
 
     @Override
@@ -74,12 +84,12 @@ public class Issue {
                 Objects.equals(story_points, issue.story_points) && Objects.equals(status_id, issue.status_id) &&
                 Objects.equals(assignee_id, issue.assignee_id) && Objects.equals(due_date, issue.due_date) &&
                 Objects.equals(parent_issue_id, issue.parent_issue_id) && Objects.equals(created_at, issue.created_at)
-                && Objects.equals(updated_at, issue.updated_at) && Objects.equals(created_by, issue.created_by);
+                && Objects.equals(updated_at, issue.updated_at) && Objects.equals(createdByID, issue.createdByID);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, column_id, title, summary, story_points, status_id, assignee_id, due_date,
-                parent_issue_id, created_at, updated_at, created_by);
+                parent_issue_id, created_at, updated_at, createdByID);
     }
 }

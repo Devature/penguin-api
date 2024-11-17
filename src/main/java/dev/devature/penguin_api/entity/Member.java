@@ -1,28 +1,39 @@
 package dev.devature.penguin_api.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
-
-import java.util.HashMap;
 
 @Getter
 @Setter
 @Table(name = "member")
 public class Member {
     @Id
-    @Column(name = "member")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(nullable = false)
-    private Long user_id;
-    private HashMap<Integer, Long> organization;
+    @ManyToOne
+    @JoinColumn(nullable = false, name = "user_id")
+    private User userId;
 
-    private Integer rank_id;
-    private Integer team;
+    @Column(nullable = false, name = "organization_id")
+    private Long organizationId;
+
+    @Column(name="rank_id")
+    private Integer rankId;
+
+    @Column(name="team")
+    private Long teamId;
+
+    public Member(Long id, User userId, Long organizationId, Integer rankId, Long teamId) {
+        this.id = id;
+        this.userId = userId;
+        this.organizationId = organizationId;
+        this.rankId = rankId;
+        this.teamId = teamId;
+    }
+
+    // For MockMVC Jackson
+    public Member() { }
 }
