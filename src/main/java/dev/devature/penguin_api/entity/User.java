@@ -10,9 +10,9 @@ import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.Set;
 
+@Entity
 @Setter
 @Getter
-@Entity
 @Table(name = "user")
 public class User {
     @Id

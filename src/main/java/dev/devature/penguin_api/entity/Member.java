@@ -2,13 +2,14 @@ package dev.devature.penguin_api.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import org.springframework.data.annotation.Id;
 
+@Entity
 @Getter
 @Table(name = "member")
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private Long id;
 
     @ManyToOne
@@ -22,16 +23,11 @@ public class Member {
     @Column(name="rank_id")
     private Integer rankId;
 
-    @ManyToOne
-    @JoinColumn(nullable = false, name = "team")
-    private Team team;
-
-    public Member(Long id, User user, Organization organizationId, Integer rankId, Team team) {
+    public Member(Long id, User user, Organization organizationId, Integer rankId) {
         this.id = id;
         this.user = user;
         this.organization = organizationId;
         this.rankId = rankId;
-        this.team = team;
     }
 
     // For MockMVC Jackson

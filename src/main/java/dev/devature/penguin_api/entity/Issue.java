@@ -8,9 +8,9 @@ import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.Set;
 
+@Entity
 @Getter
 @Setter
-@Entity
 @Table(name="issue")
 public class Issue {
     @Id
