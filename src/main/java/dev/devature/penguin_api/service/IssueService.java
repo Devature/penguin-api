@@ -1,9 +1,10 @@
 package dev.devature.penguin_api.service;
 
 import dev.devature.penguin_api.entity.Issue;
+import dev.devature.penguin_api.entity.Member;
 import dev.devature.penguin_api.enums.IssueResult;
 import dev.devature.penguin_api.repository.IssueRepository;
-import dev.devature.penguin_api.repository.OrganizationRepository;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,27 +12,28 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Service
-@Transactional
 public class IssueService {
-    private IssueRepository issueRepository;
-    private OrganizationRepository organizationRepository;
+    private final IssueRepository issueRepository;
+    private final MemberService memberService;
 
     @Autowired
-    public IssueService(IssueRepository issueRepository, OrganizationRepository organizationRepository){
+    public IssueService(IssueRepository issueRepository, MemberService memberService){
         this.issueRepository = issueRepository;
-        this.organizationRepository = organizationRepository;
+        this.memberService = memberService;
     }
 
     /**
      * @param issue Takes in an {@code Issue} that will be created in the database.
+     * @param authClaims Take in a claim to check authorization.
      * @return The result of the request to the service layer as a {@code IssueResult}.
      */
-    public IssueResult createIssue(Issue issue){
+    @Transactional
+    public IssueResult createIssue(Issue issue, Claims authClaims){
         if(checkIfBadData(issue)){
             return IssueResult.BAD_DATA;
         }
 
-        if(!checkAuthorization(issue)){
+        if(checkAuthorization(issue, authClaims)){
             return IssueResult.NOT_AUTHORIZED;
         }
 
@@ -43,10 +45,16 @@ public class IssueService {
     /**
      * @param issue Take in a {@code Issue} object to patch an issue by the ID.
      * @param id Take in a {@code Long} id that will be used to find and update an issue.
+     * @param authClaims Take in a claim to check authorization.
      * @return {@code IssueResult} enum that determines what happened during the service call.
      */
-    public IssueResult updateIssue(Issue issue, Long id){
+    @Transactional
+    public IssueResult updateIssue(Issue issue, Long id, Claims authClaims){
         Issue returnIssue = checkIfIssueExist(id);
+
+        if(checkAuthorization(issue, authClaims)){
+            return IssueResult.NOT_AUTHORIZED;
+        }
 
         if(returnIssue == null || checkIfBadData(issue)){
             return IssueResult.BAD_DATA;
@@ -62,7 +70,6 @@ public class IssueService {
         returnIssue.setCreated_at(issue.getCreated_at());
         returnIssue.setParent_issue_id(issue.getParent_issue_id());
         returnIssue.setUpdated_at(issue.getUpdated_at());
-        returnIssue.setCreatedByID(issue.getCreatedByID());
 
         Issue returnDatabaseIssue = issueRepository.save(returnIssue);
 
@@ -74,14 +81,29 @@ public class IssueService {
 
     /**
      * @param id Take in an ID to return an issue from
-     * @return The issue
+     * @return Returns a specific issue that is requested.
      */
-    public Issue getIssue(Long id){
+    public Issue getByIdIssue(Long id){
         return checkIfIssueExist(id);
     }
 
-    public IssueResult deleteIssue(Long id){
-        int rowsDelete = issueRepository.removeById(id);
+    /**
+     * Used to delete a singular issue.
+     * @param id Used to find the issue.
+     * @param authClaims Take in a claim to check authorization.
+     * @return The result of the operation.
+     */
+    @Transactional
+    public IssueResult deleteIssue(Long id, Claims authClaims){
+        Optional<Issue> issue = issueRepository.findById(id);
+
+        if(issue.isPresent()){
+            if(checkAuthorization(issue.get(), authClaims)){
+                return IssueResult.NOT_AUTHORIZED;
+            }
+        }
+
+        long rowsDelete = issueRepository.removeById(id);
 
         if(rowsDelete == 0){
             return IssueResult.NOT_FOUND;
@@ -112,16 +134,14 @@ public class IssueService {
         return issueOptional.orElse(null);
     }
 
-
     /**
      * @param issue Take in an issue with all the information to process permission levels.
+     * @param authClaims Take in a claims to be process and verify if person who they say they are.
      * @return {@code True} if the person is authorized to create issue, or {@code False} if they do not
      * have authorization to create an issue.
      */
-    private boolean checkAuthorization(Issue issue){
-        long orgID = issue.getOrganization_id();
-        long userID = issue.getCreatedByID();
-
-        return organizationRepository.existsByIdAndMembersId(orgID, userID);
+    private boolean checkAuthorization(Issue issue, Claims authClaims){
+        Optional<Member> member = memberService.getMemberByUserId(authClaims.getSubject(), issue.getOrganization_id());
+        return member.isPresent();
     }
 }

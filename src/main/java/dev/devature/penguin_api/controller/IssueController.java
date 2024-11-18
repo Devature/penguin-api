@@ -3,13 +3,14 @@ package dev.devature.penguin_api.controller;
 import dev.devature.penguin_api.entity.Issue;
 import dev.devature.penguin_api.enums.IssueResult;
 import dev.devature.penguin_api.service.IssueService;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/issue")
+@RequestMapping("/api/v1/organizations/{orgID}/issues")
 public class IssueController {
 
     private final IssueService issueService;
@@ -23,9 +24,10 @@ public class IssueController {
      * @param issue Take in a RequestBody with the issue object created.
      * @return ResponseEntity with status and body based on the result of service.
      */
-    @PostMapping("/new")
-    public ResponseEntity<String> postIssue(@RequestBody Issue issue){
-        IssueResult issueResult = issueService.createIssue(issue);
+    @PostMapping
+    public ResponseEntity<String> postIssue(@RequestAttribute("authClaims") Claims authClaims,
+                                            @RequestBody Issue issue){
+        IssueResult issueResult = issueService.createIssue(issue, authClaims);
         return stringResponseEntity(issueResult);
     }
 
@@ -34,9 +36,12 @@ public class IssueController {
      * @param id Takes in a Path variable with the issue ID to be updated.
      * @return ResponseEntity with status and body based on the result of service.
      */
-    @PatchMapping("/{id}")
-    public ResponseEntity<String> patchIssue(@RequestBody Issue issue, @PathVariable Long id){
-        IssueResult issueResult = issueService.updateIssue(issue, id);
+    @PutMapping("/{id}")
+    public ResponseEntity<String> putIssue(
+            @RequestAttribute("authClaims") Claims authClaims,
+            @RequestBody Issue issue,
+            @PathVariable Long id){
+        IssueResult issueResult = issueService.updateIssue(issue, id, authClaims);
         return stringResponseEntity(issueResult);
     }
 
@@ -47,7 +52,7 @@ public class IssueController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<Issue> getIssue(@PathVariable Long id){
-        Issue issue = issueService.getIssue(id);
+        Issue issue = issueService.getByIdIssue(id);
 
         if(issue == null){
             return ResponseEntity.notFound().build();
@@ -61,8 +66,9 @@ public class IssueController {
      * @return ResponseEntity with status and body based on the result of service.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteIssue(@PathVariable Long id){
-        IssueResult issueResult = issueService.deleteIssue(id);
+    public ResponseEntity<String> deleteIssue(@RequestAttribute("authClaims") Claims authClaims,
+                                              @PathVariable Long id){
+        IssueResult issueResult = issueService.deleteIssue(id, authClaims);
         return stringResponseEntity(issueResult);
     }
 

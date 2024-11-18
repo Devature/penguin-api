@@ -6,6 +6,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OrganizationRepository extends JpaRepository<Organization, Long> {
-
-    boolean existsByIdAndMembersId(Long organizationId, Long userId);
 }

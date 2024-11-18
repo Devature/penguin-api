@@ -33,6 +33,7 @@ public class Issue {
 
     @Column(nullable = false, unique = true)
     private String title;
+
     private String summary;
     private Integer story_points;
     private Long status_id;
@@ -47,6 +48,9 @@ public class Issue {
 
     @Column(nullable = false, name="created_by")
     private Long createdByID;
+
+    @Column(nullable = false)
+    private Long projectID;
 
     // For MockMVC Jackson
     public Issue() { }
