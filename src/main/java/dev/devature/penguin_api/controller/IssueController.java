@@ -50,6 +50,7 @@ public class IssueController {
      * @return The issue object if it request works or {@code null} if
      * something happened.
      */
+    /*
     @GetMapping("/{id}")
     public ResponseEntity<Issue> getIssue(@PathVariable Long id){
         Issue issue = issueService.getByIdIssue(id);
@@ -60,6 +61,7 @@ public class IssueController {
 
         return ResponseEntity.ok(issue);
     }
+    */
 
     /**
      * @param id Takes in a Path variable with the issue ID to be updated.
