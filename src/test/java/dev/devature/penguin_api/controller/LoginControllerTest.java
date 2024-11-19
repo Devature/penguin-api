@@ -6,6 +6,7 @@ import dev.devature.penguin_api.service.LoginService;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static org.hamcrest.Matchers.containsString;
@@ -31,7 +32,7 @@ class LoginControllerTest extends RequestsTest {
         when(loginService.authenticate(user)).thenReturn(jwtToken);
 
         this.mockMvc.perform(post("/api/v1/user/login")
-                        .contentType("application/json")
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(userJson))
                 .andExpect(status().is(200))
                 .andExpect(content()
@@ -49,7 +50,7 @@ class LoginControllerTest extends RequestsTest {
         when(loginService.authenticate(user)).thenReturn(null);
 
         this.mockMvc.perform(post("/api/v1/user/login")
-                        .contentType("application/json")
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(userJson))
                 .andExpect(status().is(401))
                 .andDo(document("login/failure"));
