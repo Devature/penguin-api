@@ -23,6 +23,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         OPEN_ENDPOINTS = new HashSet<>();
         OPEN_ENDPOINTS.add("/api/v1/user/registration");
         OPEN_ENDPOINTS.add("/api/v1/user/login");
+        OPEN_ENDPOINTS.add("/api/v1/test/**");
         OPEN_ENDPOINTS.add("/swagger-ui/**");
         OPEN_ENDPOINTS.add("/v3/api-docs/**");
         OPEN_ENDPOINTS.add("/openapi-2.0.json");
