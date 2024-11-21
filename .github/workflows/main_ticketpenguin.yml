@@ -31,7 +31,7 @@ jobs:
           echo "spring.profiles.active=prod" >> src/main/resources/application.properties
 
       - name: Build with Maven
-        run: mvn clean install
+        run: mvn clean install -P production
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
