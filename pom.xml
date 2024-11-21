@@ -34,6 +34,69 @@
 
 	<profiles>
 		<profile>
+			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<includes>
+								<include>**/*Test.java</include>
+							</includes>
+						</configuration>
+					</plugin>
+
+					<!-- For generating OpenAPI JSON file from Spring REST Docs snippets -->
+					<plugin>
+						<groupId>io.github.berkleytechnologyservices</groupId>
+						<artifactId>restdocs-spec-maven-plugin</artifactId>
+						<version>0.23</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>generate</goal>
+								</goals>
+								<configuration>
+									<format>JSON</format>
+									<host>${api.host}:${api.port}</host>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-resources-plugin</artifactId>
+						<version>3.2.0</version>
+						<executions>
+							<execution>
+								<id>copy-openapi-json</id>
+								<phase>prepare-package</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${project.build.directory}/../src/main/resources/static/</outputDirectory>
+									<resources>
+										<resource>
+											<directory>${project.build.directory}/restdocs-spec/</directory>
+											<includes>
+												<include>openapi-2.0.json</include>
+											</includes>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
 			<id>production</id>
 			<properties>
 				<maven.test.skip>true</maven.test.skip>
@@ -171,60 +234,6 @@
 						</exclude>
 					</excludes>
 				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<includes>
-						<include>**/*Test.java</include>
-					</includes>
-				</configuration>
-			</plugin>
-
-			<!-- For generating OpenAPI JSON file from Spring REST Docs snippets -->
-			<plugin>
-				<groupId>io.github.berkleytechnologyservices</groupId>
-				<artifactId>restdocs-spec-maven-plugin</artifactId>
-				<version>0.23</version>
-				<executions>
-				<execution>
-					<goals>
-					<goal>generate</goal>
-					</goals>
-					<configuration>
-					<format>JSON</format>
-					<host>${api.host}:${api.port}</host>
-					</configuration>
-				</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>3.2.0</version>
-				<executions>
-					<execution>
-						<id>copy-openapi-json</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/../src/main/resources/static/</outputDirectory>
-							<resources>
-								<resource>
-									<directory>${project.build.directory}/restdocs-spec/</directory>
-									<includes>
-										<include>openapi-2.0.json</include>
-									</includes>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>
