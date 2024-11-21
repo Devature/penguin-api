@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.3.4</version>
+		<version>3.3.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>dev.devature</groupId>
@@ -34,10 +34,11 @@
 
 	<profiles>
 		<profile>
-			<id>kyle-staging</id>
+			<id>production</id>
 			<properties>
-				<api.host>tipenguin.lol</api.host>
-				<api.port>49159</api.port>
+				<maven.test.skip>true</maven.test.skip>
+				<api.host>api.devature.dev</api.host>
+				<api.port>443</api.port>
 			</properties>
 		</profile>
 	</profiles>
