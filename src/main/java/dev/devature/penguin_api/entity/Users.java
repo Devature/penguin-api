@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -54,6 +55,9 @@ public class Users {
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "members")
     private Set<Organization> organizations;
+
+    @OneToMany(mappedBy = "users")
+    private List<Member> memberList;
 
     /**
      * For the use of MockMVC Jackson testing.

@@ -29,10 +29,9 @@ public abstract class RequestsTest {
     protected ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
-    void setUp( WebApplicationContext webApplicationContext,
-                        RestDocumentationContextProvider restDocumentation) {
+    void setUp(RestDocumentationContextProvider restDocumentation) {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context)
                         .apply(documentationConfiguration(restDocumentation))
-                                                                    .build();
+                        .build();
     }
 }
