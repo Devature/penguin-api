@@ -1,6 +1,6 @@
 package dev.devature.penguin_api.service;
 
-import dev.devature.penguin_api.entity.User;
+import dev.devature.penguin_api.entity.Users;
 import dev.devature.penguin_api.enums.RegisterResult;
 import dev.devature.penguin_api.repository.UserRepository;
 import dev.devature.penguin_api.utils.EmailPasswordValidationUtils;
@@ -22,14 +22,14 @@ public class RegisterService {
     }
 
     /**
-     * @param user Take in a {@code User} object to be processed.
+     * @param users Take in a {@code User} object to be processed.
      * @return User {@code User} object if the account was successfully add or
      * {@code null} if it failed to add or meet requirements.
      */
-    public RegisterResult registerUser(User user){
-        boolean isEmailValid = EmailPasswordValidationUtils.isValidEmail(user.getEmail());
-        boolean isPasswordValid = EmailPasswordValidationUtils.isValidPassword(user.getPassword());
-        boolean isEmailAvailable = checkEmailAvailable(user.getEmail());
+    public RegisterResult registerUser(Users users){
+        boolean isEmailValid = EmailPasswordValidationUtils.isValidEmail(users.getEmail());
+        boolean isPasswordValid = EmailPasswordValidationUtils.isValidPassword(users.getPassword());
+        boolean isEmailAvailable = checkEmailAvailable(users.getEmail());
 
         if(!isEmailAvailable){
             return RegisterResult.EMAIL_TAKEN;
@@ -39,17 +39,17 @@ public class RegisterService {
             return RegisterResult.INVALID_ACCOUNT_INFO;
         }
 
-        String hashedPassword = this.passwordEncoder.encode(user.getPassword());
-        user.setPassword(hashedPassword);
+        String hashedPassword = this.passwordEncoder.encode(users.getPassword());
+        users.setPassword(hashedPassword);
 
-        User dbUser = userRepository.save(user);
+        Users dbUsers = userRepository.save(users);
 
-        boolean isValid = dbUser.getId() != null
-                && dbUser.getId() >= 0
-                && dbUser.getEmail() != null
-                && !dbUser.getEmail().isEmpty()
-                && dbUser.getPassword() != null
-                && !dbUser.getPassword().isEmpty();
+        boolean isValid = dbUsers.getId() != null
+                && dbUsers.getId() >= 0
+                && dbUsers.getEmail() != null
+                && !dbUsers.getEmail().isEmpty()
+                && dbUsers.getPassword() != null
+                && !dbUsers.getPassword().isEmpty();
 
         return isValid ? RegisterResult.SUCCESS : RegisterResult.UNKNOWN_ERROR;
     }
@@ -59,7 +59,7 @@ public class RegisterService {
      * @return Return {@code True} if email does not available or {@code False} if the email is unavailable.
      */
     public boolean checkEmailAvailable(String email){
-        User user = userRepository.findByEmail(email);
-        return user == null;
+        Users users = userRepository.findByEmail(email);
+        return users == null;
     }
 }

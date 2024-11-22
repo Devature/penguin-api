@@ -1,6 +1,6 @@
 package dev.devature.penguin_api.controller;
 
-import dev.devature.penguin_api.entity.User;
+import dev.devature.penguin_api.entity.Users;
 import dev.devature.penguin_api.enums.RegisterResult;
 import dev.devature.penguin_api.service.RegisterService;
 import org.json.JSONObject;
@@ -21,14 +21,14 @@ public class RegisterControllerTest extends RequestsTest {
 
     @Test
     public void register_WithUserSucceed() throws Exception {
-        User user = new User("johnsmith@example.com", "Password_1");
+        Users users = new Users("johnsmith@example.com", "Password_1");
         String userJson = new JSONObject()
-                .put("email", user.getEmail())
-                .put("password", user.getPassword()).toString();
+                .put("email", users.getEmail())
+                .put("password", users.getPassword()).toString();
 
-        when(registerService.checkEmailAvailable(user.getEmail())).thenReturn(true);
+        when(registerService.checkEmailAvailable(users.getEmail())).thenReturn(true);
 
-        when(registerService.registerUser(user)).thenReturn(RegisterResult.SUCCESS);
+        when(registerService.registerUser(users)).thenReturn(RegisterResult.SUCCESS);
 
         this.mockMvc.perform(post("/api/v1/user/registration")
                         .contentType("application/json")
@@ -41,14 +41,14 @@ public class RegisterControllerTest extends RequestsTest {
 
     @Test
     public void register_WithUserTotalFailed() throws Exception {
-        User user = new User("johnsmith@example.com", "Password_1");
+        Users users = new Users("johnsmith@example.com", "Password_1");
         String userJson = new JSONObject()
-                .put("email", user.getEmail())
-                .put("password", user.getPassword()).toString();
+                .put("email", users.getEmail())
+                .put("password", users.getPassword()).toString();
 
-        when(registerService.checkEmailAvailable(user.getEmail())).thenReturn(true);
+        when(registerService.checkEmailAvailable(users.getEmail())).thenReturn(true);
 
-        when(registerService.registerUser(user)).thenReturn(RegisterResult.UNKNOWN_ERROR);
+        when(registerService.registerUser(users)).thenReturn(RegisterResult.UNKNOWN_ERROR);
 
         this.mockMvc.perform(post("/api/v1/user/registration")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -62,14 +62,14 @@ public class RegisterControllerTest extends RequestsTest {
 
     @Test
     public void register_WithBadData() throws Exception {
-        User user = new User("johnsmith@example.com", "Password1");
+        Users users = new Users("johnsmith@example.com", "Password1");
         String userJson = new JSONObject()
-                .put("email", user.getEmail())
-                .put("password", user.getPassword()).toString();
+                .put("email", users.getEmail())
+                .put("password", users.getPassword()).toString();
 
-        when(registerService.checkEmailAvailable(user.getEmail())).thenReturn(true);
+        when(registerService.checkEmailAvailable(users.getEmail())).thenReturn(true);
 
-        when(registerService.registerUser(user)).thenReturn(RegisterResult.INVALID_ACCOUNT_INFO);
+        when(registerService.registerUser(users)).thenReturn(RegisterResult.INVALID_ACCOUNT_INFO);
 
         this.mockMvc.perform(post("/api/v1/user/registration")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -82,12 +82,12 @@ public class RegisterControllerTest extends RequestsTest {
 
     @Test
     public void registerUser_WithEmailConflict() throws Exception {
-        User user = new User("testsmith@example.com", "Password_1");
+        Users users = new Users("testsmith@example.com", "Password_1");
         String userJson = new JSONObject()
-                .put("email", user.getEmail())
-                .put("password", user.getPassword()).toString();
+                .put("email", users.getEmail())
+                .put("password", users.getPassword()).toString();
 
-        when(registerService.registerUser(user)).thenReturn(RegisterResult.EMAIL_TAKEN);
+        when(registerService.registerUser(users)).thenReturn(RegisterResult.EMAIL_TAKEN);
 
         this.mockMvc.perform(post("/api/v1/user/registration")
                         .contentType(MediaType.APPLICATION_JSON)

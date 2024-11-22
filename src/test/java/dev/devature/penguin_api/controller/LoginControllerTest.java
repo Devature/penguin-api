@@ -1,6 +1,6 @@
 package dev.devature.penguin_api.controller;
 
-import dev.devature.penguin_api.entity.User;
+import dev.devature.penguin_api.entity.Users;
 import dev.devature.penguin_api.model.JwtToken;
 import dev.devature.penguin_api.service.LoginService;
 import org.json.JSONObject;
@@ -21,15 +21,15 @@ class LoginControllerTest extends RequestsTest {
 
     @Test
     public void loginSucceed() throws Exception {
-        User user = new User("agoodtestemail@testemail.com","Th1sisvalidpass!");
+        Users users = new Users("agoodtestemail@testemail.com","Th1sisvalidpass!");
         String userJson = new JSONObject()
-                .put("email", user.getEmail())
-                .put("password", user.getPassword()).toString();
+                .put("email", users.getEmail())
+                .put("password", users.getPassword()).toString();
 
         JwtToken jwtToken = new JwtToken("abc123");
         String jwtTokenJson = objectMapper.writeValueAsString(jwtToken);
 
-        when(loginService.authenticate(user)).thenReturn(jwtToken);
+        when(loginService.authenticate(users)).thenReturn(jwtToken);
 
         this.mockMvc.perform(post("/api/v1/user/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -42,12 +42,12 @@ class LoginControllerTest extends RequestsTest {
 
     @Test
     public void loginFailure() throws Exception {
-        User user = new User("testemail2testemail.com", "invalid");
+        Users users = new Users("testemail2testemail.com", "invalid");
         String userJson = new JSONObject()
-                .put("email", user.getEmail())
-                .put("password", user.getPassword()).toString();
+                .put("email", users.getEmail())
+                .put("password", users.getPassword()).toString();
 
-        when(loginService.authenticate(user)).thenReturn(null);
+        when(loginService.authenticate(users)).thenReturn(null);
 
         this.mockMvc.perform(post("/api/v1/user/login")
                         .contentType(MediaType.APPLICATION_JSON)

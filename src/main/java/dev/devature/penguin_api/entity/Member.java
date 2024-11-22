@@ -14,7 +14,7 @@ public class Member {
 
     @ManyToOne
     @JoinColumn(nullable = false, name = "user_id")
-    private User user;
+    private Users users;
 
     @ManyToOne
     @JoinColumn(nullable = false, name = "organization_id")
@@ -23,9 +23,9 @@ public class Member {
     @Column(name="rank_id")
     private Integer rankId;
 
-    public Member(Long id, User user, Organization organizationId, Integer rankId) {
+    public Member(Long id, Users users, Organization organizationId, Integer rankId) {
         this.id = id;
-        this.user = user;
+        this.users = users;
         this.organization = organizationId;
         this.rankId = rankId;
     }
