@@ -1,6 +1,5 @@
-package dev.devature.penguin_api.service;
+package dev.devature.penguin_api.utils;
 
-import dev.devature.penguin_api.utils.EmailPasswordValidationUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
