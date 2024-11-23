@@ -7,7 +7,7 @@ import dev.devature.penguin_api.exception.OrgRequestException;
 import dev.devature.penguin_api.exception.OrganizationNotFoundException;
 import dev.devature.penguin_api.model.OrgRequest;
 import dev.devature.penguin_api.repository.OrganizationRepository;
-import dev.devature.penguin_api.repository.UserRepository;
+import dev.devature.penguin_api.repository.AppUserRepository;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,12 +18,12 @@ import java.util.Set;
 @Service
 public class OrganizationService {
     private final OrganizationRepository organizationRepository;
-    private final UserRepository userRepository;
+    private final AppUserRepository appUserRepository;
 
     @Autowired
-    public OrganizationService(OrganizationRepository organizationRepository, UserRepository userRepository) {
+    public OrganizationService(OrganizationRepository organizationRepository, AppUserRepository appUserRepository) {
         this.organizationRepository = organizationRepository;
-        this.userRepository = userRepository;
+        this.appUserRepository = appUserRepository;
     }
 
     public Organization createOrganization(OrgRequest orgRequest, Claims authClaims) throws OrgRequestException {
@@ -31,8 +31,8 @@ public class OrganizationService {
             throw new OrgRequestException("Invalid organization name");
 
         AppUser owner = orgRequest.getOwner_id() == null ?
-                userRepository.findByEmail(authClaims.getSubject())
-                : userRepository.findById(orgRequest.getOwner_id()).orElse(null);
+                appUserRepository.findByEmail(authClaims.getSubject())
+                : appUserRepository.findById(orgRequest.getOwner_id()).orElse(null);
 
         if (owner == null) throw new OrgRequestException("Invalid owner id");
 
@@ -57,7 +57,7 @@ public class OrganizationService {
     }
 
     public Set<Organization> getUserOrganizations(Claims authClaims) {
-        AppUser appUser = this.userRepository.findByEmail(authClaims.getSubject());
+        AppUser appUser = this.appUserRepository.findByEmail(authClaims.getSubject());
         return appUser.getOrganizations();
     }
 
@@ -74,7 +74,7 @@ public class OrganizationService {
             }
 
             if (newOwnerId != null) {
-                Optional<AppUser> newOwner = this.userRepository.findById(newOwnerId);
+                Optional<AppUser> newOwner = this.appUserRepository.findById(newOwnerId);
                 if (newOwner.isPresent()) organization.setOwner(newOwner.get());
                 else throw new OrgRequestException("Invalid owner id");
             }

@@ -17,6 +17,6 @@ public class MemberService {
     }
 
     public Optional<Member> getMemberByUserId(String email, Long orgId){
-        return memberRepository.findByUsers_EmailAndOrganizationId(email, orgId);
+        return memberRepository.findByAppUser_EmailAndOrganizationId(email, orgId);
     }
 }

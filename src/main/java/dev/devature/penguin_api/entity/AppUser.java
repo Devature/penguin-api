@@ -56,7 +56,7 @@ public class AppUser {
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "members")
     private Set<Organization> organizations;
 
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "appUser")
     private List<Member> memberList;
 
     /**

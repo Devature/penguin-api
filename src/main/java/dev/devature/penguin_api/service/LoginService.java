@@ -6,25 +6,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import dev.devature.penguin_api.repository.UserRepository;
+import dev.devature.penguin_api.repository.AppUserRepository;
 import dev.devature.penguin_api.utils.EmailPasswordValidationUtils;
 
 @Service
 public class LoginService {
 
-    private final UserRepository userRepository;
+    private final AppUserRepository appUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
     /**
      *
-     * @param userRepository for grabbing password from database
+     * @param appUserRepository for grabbing password from database
      * @param passwordEncoder an Argon2PasswordEncoder used for verifying input password
      *                        against the hashed password in data
      */
     @Autowired
-    public LoginService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
-        this.userRepository = userRepository;
+    public LoginService(AppUserRepository appUserRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
+        this.appUserRepository = appUserRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
     }
@@ -53,7 +53,7 @@ public class LoginService {
      */
     public JwtToken authenticate(AppUser appUser) {
         if (!checkValidity(appUser)) return null;
-        AppUser foundAppUser = userRepository.findByEmail(appUser.getEmail());
+        AppUser foundAppUser = appUserRepository.findByEmail(appUser.getEmail());
         if (foundAppUser != null && this.verifyPassword(appUser.getPassword(), foundAppUser.getPassword()))
             return this.jwtService.generateToken(appUser.getEmail());
         else return null;

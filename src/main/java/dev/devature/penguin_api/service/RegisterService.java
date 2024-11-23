@@ -2,7 +2,7 @@ package dev.devature.penguin_api.service;
 
 import dev.devature.penguin_api.entity.AppUser;
 import dev.devature.penguin_api.enums.RegisterResult;
-import dev.devature.penguin_api.repository.UserRepository;
+import dev.devature.penguin_api.repository.AppUserRepository;
 import dev.devature.penguin_api.utils.EmailPasswordValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,12 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class RegisterService {
-    private final UserRepository userRepository;
+    private final AppUserRepository appUserRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public RegisterService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
+    public RegisterService(AppUserRepository appUserRepository, PasswordEncoder passwordEncoder) {
+        this.appUserRepository = appUserRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -42,7 +42,7 @@ public class RegisterService {
         String hashedPassword = this.passwordEncoder.encode(appUser.getPassword());
         appUser.setPassword(hashedPassword);
 
-        AppUser dbAppUser = userRepository.save(appUser);
+        AppUser dbAppUser = appUserRepository.save(appUser);
 
         boolean isValid = dbAppUser.getId() != null
                 && dbAppUser.getId() >= 0
@@ -59,7 +59,7 @@ public class RegisterService {
      * @return Return {@code True} if email does not available or {@code False} if the email is unavailable.
      */
     public boolean checkEmailAvailable(String email){
-        AppUser appUser = userRepository.findByEmail(email);
+        AppUser appUser = appUserRepository.findByEmail(email);
         return appUser == null;
     }
 }

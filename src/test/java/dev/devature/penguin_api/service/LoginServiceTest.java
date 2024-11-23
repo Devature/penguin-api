@@ -1,7 +1,7 @@
 package dev.devature.penguin_api.service;
 
 import dev.devature.penguin_api.entity.AppUser;
-import dev.devature.penguin_api.repository.UserRepository;
+import dev.devature.penguin_api.repository.AppUserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -19,7 +19,7 @@ class LoginServiceTest {
     private LoginService loginService;
 
     @Mock
-    private UserRepository userRepository;
+    private AppUserRepository appUserRepository;
 
     @Mock
     private Argon2PasswordEncoder passwordEncoder;
@@ -52,14 +52,14 @@ class LoginServiceTest {
         String hashedPassword = "$argon2id$v=19$m=65536,t=3,p=4$...";
 
         AppUser mockAppUser = new AppUser("test@example.com", hashedPassword);
-        when(userRepository.findByEmail(appUser.getEmail())).thenReturn(mockAppUser);
+        when(appUserRepository.findByEmail(appUser.getEmail())).thenReturn(mockAppUser);
         when(passwordEncoder.matches(appUser.getPassword(), hashedPassword)).thenReturn(true);
         when(jwtService.generateToken(mockAppUser.getEmail())).thenReturn(new JwtToken("abc123"));
 
         JwtToken result = loginService.authenticate(appUser);
 
         assertNotNull(result);
-        verify(userRepository).findByEmail(appUser.getEmail());
+        verify(appUserRepository).findByEmail(appUser.getEmail());
         verify(passwordEncoder).matches(appUser.getPassword(), hashedPassword);
     }
 
@@ -69,13 +69,13 @@ class LoginServiceTest {
         String hashedPassword = "$argon2id$v=19$m=65536,t=3,p=4$...";
 
         AppUser mockAppUser = new AppUser("test@example.com", hashedPassword);
-        when(userRepository.findByEmail(appUser.getEmail())).thenReturn(mockAppUser);
+        when(appUserRepository.findByEmail(appUser.getEmail())).thenReturn(mockAppUser);
         when(passwordEncoder.matches(appUser.getPassword(), hashedPassword)).thenReturn(false);
 
         JwtToken result = loginService.authenticate(appUser);
 
         assertNull(result);
-        verify(userRepository).findByEmail(appUser.getEmail());
+        verify(appUserRepository).findByEmail(appUser.getEmail());
         verify(passwordEncoder).matches(appUser.getPassword(), hashedPassword);
     }
 
@@ -83,12 +83,12 @@ class LoginServiceTest {
     void testAuthenticate_Failure_UserNotFound() {
         AppUser appUser = new AppUser("notfound@example.com", "SomeP@ssw0rd!");
 
-        when(userRepository.findByEmail(appUser.getEmail())).thenReturn(null);
+        when(appUserRepository.findByEmail(appUser.getEmail())).thenReturn(null);
 
         JwtToken result = loginService.authenticate(appUser);
 
         assertNull(result);
-        verify(userRepository).findByEmail(appUser.getEmail());
+        verify(appUserRepository).findByEmail(appUser.getEmail());
     }
 
 }
