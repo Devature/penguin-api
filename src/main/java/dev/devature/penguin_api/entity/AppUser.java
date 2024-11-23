@@ -7,14 +7,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Setter
 @Getter
-@Table(name = "user")
-public class User {
+@Table(name = "users")
+public class AppUser {
     @Id
     @Column(name="id")
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -55,19 +56,22 @@ public class User {
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "members")
     private Set<Organization> organizations;
 
+    @OneToMany(mappedBy = "appUser")
+    private List<Member> memberList;
+
     /**
      * For the use of MockMVC Jackson testing.
      */
-    public User() {}
+    public AppUser() {}
 
-    public User(String email, String password) {
+    public AppUser(String email, String password) {
         this.email = email;
         this.password = password;
     }
 
-    public User(Long id, String email, String password, String name, String google_auth_token,
-                String google_refresh_token, String microsoft_auth_token, String microsoft_refresh_token,
-                Timestamp created_at, Timestamp last_access, String role, String settings) {
+    public AppUser(Long id, String email, String password, String name, String google_auth_token,
+                   String google_refresh_token, String microsoft_auth_token, String microsoft_refresh_token,
+                   Timestamp created_at, Timestamp last_access, String role, String settings) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -86,9 +90,9 @@ public class User {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(email, user.email) &&
-                Objects.equals(password, user.password);
+        AppUser appUser = (AppUser) o;
+        return Objects.equals(id, appUser.id) && Objects.equals(email, appUser.email) &&
+                Objects.equals(password, appUser.password);
     }
 
     @Override

@@ -12,9 +12,9 @@ public class Member {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "user_id")
-    private User user;
+    private AppUser appUser;
 
     @ManyToOne
     @JoinColumn(nullable = false, name = "organization_id")
@@ -23,9 +23,9 @@ public class Member {
     @Column(name="rank_id")
     private Integer rankId;
 
-    public Member(Long id, User user, Organization organizationId, Integer rankId) {
+    public Member(Long id, AppUser appUser, Organization organizationId, Integer rankId) {
         this.id = id;
-        this.user = user;
+        this.appUser = appUser;
         this.organization = organizationId;
         this.rankId = rankId;
     }

@@ -1,6 +1,6 @@
 package dev.devature.penguin_api.controller;
 
-import dev.devature.penguin_api.entity.User;
+import dev.devature.penguin_api.entity.AppUser;
 import dev.devature.penguin_api.enums.RegisterResult;
 import dev.devature.penguin_api.service.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +19,13 @@ public class RegisterController {
     }
 
     /**
-     * @param user Take in a {@code User} object for the processing.
+     * @param appUser Take in a {@code User} object for the processing.
      * @return ResponseEntity of 201 if the registration was successful or 400 if the registration was
      * a failure.
      */
     @PostMapping("/registration")
-    public ResponseEntity<String> register(@RequestBody User user){
-        RegisterResult registerServiceStatus = registerService.registerUser(user);
+    public ResponseEntity<String> register(@RequestBody AppUser appUser){
+        RegisterResult registerServiceStatus = registerService.registerUser(appUser);
 
         switch (registerServiceStatus){
             case SUCCESS -> {
