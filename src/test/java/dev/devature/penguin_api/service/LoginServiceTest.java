@@ -1,6 +1,6 @@
 package dev.devature.penguin_api.service;
 
-import dev.devature.penguin_api.entity.Users;
+import dev.devature.penguin_api.entity.AppUser;
 import dev.devature.penguin_api.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,47 +48,47 @@ class LoginServiceTest {
 
     @Test
     void testAuthenticate_Success() {
-        Users users = new Users("test@example.com", "ValidP@ssw0rd!");
+        AppUser appUser = new AppUser("test@example.com", "ValidP@ssw0rd!");
         String hashedPassword = "$argon2id$v=19$m=65536,t=3,p=4$...";
 
-        Users mockUsers = new Users("test@example.com", hashedPassword);
-        when(userRepository.findByEmail(users.getEmail())).thenReturn(mockUsers);
-        when(passwordEncoder.matches(users.getPassword(), hashedPassword)).thenReturn(true);
-        when(jwtService.generateToken(mockUsers.getEmail())).thenReturn(new JwtToken("abc123"));
+        AppUser mockAppUser = new AppUser("test@example.com", hashedPassword);
+        when(userRepository.findByEmail(appUser.getEmail())).thenReturn(mockAppUser);
+        when(passwordEncoder.matches(appUser.getPassword(), hashedPassword)).thenReturn(true);
+        when(jwtService.generateToken(mockAppUser.getEmail())).thenReturn(new JwtToken("abc123"));
 
-        JwtToken result = loginService.authenticate(users);
+        JwtToken result = loginService.authenticate(appUser);
 
         assertNotNull(result);
-        verify(userRepository).findByEmail(users.getEmail());
-        verify(passwordEncoder).matches(users.getPassword(), hashedPassword);
+        verify(userRepository).findByEmail(appUser.getEmail());
+        verify(passwordEncoder).matches(appUser.getPassword(), hashedPassword);
     }
 
     @Test
     void testAuthenticate_Failure_InvalidPassword() {
-        Users users = new Users("test@example.com", "invalidP@ssw0rd!");
+        AppUser appUser = new AppUser("test@example.com", "invalidP@ssw0rd!");
         String hashedPassword = "$argon2id$v=19$m=65536,t=3,p=4$...";
 
-        Users mockUsers = new Users("test@example.com", hashedPassword);
-        when(userRepository.findByEmail(users.getEmail())).thenReturn(mockUsers);
-        when(passwordEncoder.matches(users.getPassword(), hashedPassword)).thenReturn(false);
+        AppUser mockAppUser = new AppUser("test@example.com", hashedPassword);
+        when(userRepository.findByEmail(appUser.getEmail())).thenReturn(mockAppUser);
+        when(passwordEncoder.matches(appUser.getPassword(), hashedPassword)).thenReturn(false);
 
-        JwtToken result = loginService.authenticate(users);
+        JwtToken result = loginService.authenticate(appUser);
 
         assertNull(result);
-        verify(userRepository).findByEmail(users.getEmail());
-        verify(passwordEncoder).matches(users.getPassword(), hashedPassword);
+        verify(userRepository).findByEmail(appUser.getEmail());
+        verify(passwordEncoder).matches(appUser.getPassword(), hashedPassword);
     }
 
     @Test
     void testAuthenticate_Failure_UserNotFound() {
-        Users users = new Users("notfound@example.com", "SomeP@ssw0rd!");
+        AppUser appUser = new AppUser("notfound@example.com", "SomeP@ssw0rd!");
 
-        when(userRepository.findByEmail(users.getEmail())).thenReturn(null);
+        when(userRepository.findByEmail(appUser.getEmail())).thenReturn(null);
 
-        JwtToken result = loginService.authenticate(users);
+        JwtToken result = loginService.authenticate(appUser);
 
         assertNull(result);
-        verify(userRepository).findByEmail(users.getEmail());
+        verify(userRepository).findByEmail(appUser.getEmail());
     }
 
 }

@@ -1,6 +1,6 @@
 package dev.devature.penguin_api.controller;
 
-import dev.devature.penguin_api.entity.Users;
+import dev.devature.penguin_api.entity.AppUser;
 import dev.devature.penguin_api.model.JwtToken;
 import dev.devature.penguin_api.service.LoginService;
 import org.json.JSONObject;
@@ -21,15 +21,15 @@ class LoginControllerTest extends RequestsTest {
 
     @Test
     public void loginSucceed() throws Exception {
-        Users users = new Users("agoodtestemail@testemail.com","Th1sisvalidpass!");
+        AppUser appUser = new AppUser("agoodtestemail@testemail.com","Th1sisvalidpass!");
         String userJson = new JSONObject()
-                .put("email", users.getEmail())
-                .put("password", users.getPassword()).toString();
+                .put("email", appUser.getEmail())
+                .put("password", appUser.getPassword()).toString();
 
         JwtToken jwtToken = new JwtToken("abc123");
         String jwtTokenJson = objectMapper.writeValueAsString(jwtToken);
 
-        when(loginService.authenticate(users)).thenReturn(jwtToken);
+        when(loginService.authenticate(appUser)).thenReturn(jwtToken);
 
         this.mockMvc.perform(post("/api/v1/user/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -42,12 +42,12 @@ class LoginControllerTest extends RequestsTest {
 
     @Test
     public void loginFailure() throws Exception {
-        Users users = new Users("testemail2testemail.com", "invalid");
+        AppUser appUser = new AppUser("testemail2testemail.com", "invalid");
         String userJson = new JSONObject()
-                .put("email", users.getEmail())
-                .put("password", users.getPassword()).toString();
+                .put("email", appUser.getEmail())
+                .put("password", appUser.getPassword()).toString();
 
-        when(loginService.authenticate(users)).thenReturn(null);
+        when(loginService.authenticate(appUser)).thenReturn(null);
 
         this.mockMvc.perform(post("/api/v1/user/login")
                         .contentType(MediaType.APPLICATION_JSON)

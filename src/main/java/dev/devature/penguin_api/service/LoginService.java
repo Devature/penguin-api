@@ -1,6 +1,6 @@
 package dev.devature.penguin_api.service;
 
-import dev.devature.penguin_api.entity.Users;
+import dev.devature.penguin_api.entity.AppUser;
 import dev.devature.penguin_api.model.JwtToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -40,22 +40,22 @@ public class LoginService {
         return passwordEncoder.matches(plainPassword, hashedPassword);
     }
 
-    public boolean checkValidity(Users users) {
-        return EmailPasswordValidationUtils.isValidEmail(users.getEmail())
-                && EmailPasswordValidationUtils.isValidPassword(users.getPassword());
+    public boolean checkValidity(AppUser appUser) {
+        return EmailPasswordValidationUtils.isValidEmail(appUser.getEmail())
+                && EmailPasswordValidationUtils.isValidPassword(appUser.getPassword());
     }
 
     /**
-     * @param users an User containing the input email and password
+     * @param appUser an User containing the input email and password
      * @return A {@code JwtToken} object containing the token the user should use
      *         for subsequent authentication requests, or null if the user did not
      *         authenticate successfully
      */
-    public JwtToken authenticate(Users users) {
-        if (!checkValidity(users)) return null;
-        Users foundUsers = userRepository.findByEmail(users.getEmail());
-        if (foundUsers != null && this.verifyPassword(users.getPassword(), foundUsers.getPassword()))
-            return this.jwtService.generateToken(users.getEmail());
+    public JwtToken authenticate(AppUser appUser) {
+        if (!checkValidity(appUser)) return null;
+        AppUser foundAppUser = userRepository.findByEmail(appUser.getEmail());
+        if (foundAppUser != null && this.verifyPassword(appUser.getPassword(), foundAppUser.getPassword()))
+            return this.jwtService.generateToken(appUser.getEmail());
         else return null;
     }
 }

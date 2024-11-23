@@ -1,7 +1,7 @@
 package dev.devature.penguin_api.service;
 
 import dev.devature.penguin_api.entity.Organization;
-import dev.devature.penguin_api.entity.Users;
+import dev.devature.penguin_api.entity.AppUser;
 import dev.devature.penguin_api.exception.AccessForbiddenException;
 import dev.devature.penguin_api.exception.OrgRequestException;
 import dev.devature.penguin_api.exception.OrganizationNotFoundException;
@@ -30,7 +30,7 @@ public class OrganizationService {
         if (orgRequest.getName() == null || orgRequest.getName().isBlank())
             throw new OrgRequestException("Invalid organization name");
 
-        Users owner = orgRequest.getOwner_id() == null ?
+        AppUser owner = orgRequest.getOwner_id() == null ?
                 userRepository.findByEmail(authClaims.getSubject())
                 : userRepository.findById(orgRequest.getOwner_id()).orElse(null);
 
@@ -57,8 +57,8 @@ public class OrganizationService {
     }
 
     public Set<Organization> getUserOrganizations(Claims authClaims) {
-        Users users = this.userRepository.findByEmail(authClaims.getSubject());
-        return users.getOrganizations();
+        AppUser appUser = this.userRepository.findByEmail(authClaims.getSubject());
+        return appUser.getOrganizations();
     }
 
     public Organization updateOrganization(long organizationId, OrgRequest request, Claims authClaims)
@@ -74,7 +74,7 @@ public class OrganizationService {
             }
 
             if (newOwnerId != null) {
-                Optional<Users> newOwner = this.userRepository.findById(newOwnerId);
+                Optional<AppUser> newOwner = this.userRepository.findById(newOwnerId);
                 if (newOwner.isPresent()) organization.setOwner(newOwner.get());
                 else throw new OrgRequestException("Invalid owner id");
             }

@@ -15,7 +15,7 @@ import java.util.Set;
 @Setter
 @Getter
 @Table(name = "users")
-public class Users {
+public class AppUser {
     @Id
     @Column(name="id")
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -62,16 +62,16 @@ public class Users {
     /**
      * For the use of MockMVC Jackson testing.
      */
-    public Users() {}
+    public AppUser() {}
 
-    public Users(String email, String password) {
+    public AppUser(String email, String password) {
         this.email = email;
         this.password = password;
     }
 
-    public Users(Long id, String email, String password, String name, String google_auth_token,
-                 String google_refresh_token, String microsoft_auth_token, String microsoft_refresh_token,
-                 Timestamp created_at, Timestamp last_access, String role, String settings) {
+    public AppUser(Long id, String email, String password, String name, String google_auth_token,
+                   String google_refresh_token, String microsoft_auth_token, String microsoft_refresh_token,
+                   Timestamp created_at, Timestamp last_access, String role, String settings) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -90,9 +90,9 @@ public class Users {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Users users = (Users) o;
-        return Objects.equals(id, users.id) && Objects.equals(email, users.email) &&
-                Objects.equals(password, users.password);
+        AppUser appUser = (AppUser) o;
+        return Objects.equals(id, appUser.id) && Objects.equals(email, appUser.email) &&
+                Objects.equals(password, appUser.password);
     }
 
     @Override

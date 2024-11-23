@@ -17,7 +17,7 @@ public class Organization {
     @ManyToOne
     @JoinColumn(name = "owner_id")
     @Setter
-    private Users owner;
+    private AppUser owner;
 
     @Setter
     private String name;
@@ -26,7 +26,7 @@ public class Organization {
     @JoinTable(name = "organization_members",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "organization_id"))
-    private Set<Users> members;
+    private Set<AppUser> members;
 
     public Organization() {
         this.members = new HashSet<>();

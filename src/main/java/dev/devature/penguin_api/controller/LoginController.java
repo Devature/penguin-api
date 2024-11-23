@@ -1,6 +1,6 @@
 package dev.devature.penguin_api.controller;
 
-import dev.devature.penguin_api.entity.Users;
+import dev.devature.penguin_api.entity.AppUser;
 import dev.devature.penguin_api.model.JwtToken;
 import dev.devature.penguin_api.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +24,12 @@ public class LoginController {
     }
 
     /**
-     * @param users a {@code User} mapped from JSON data
+     * @param appUser a {@code User} mapped from JSON data
      * @return a 200 response if successful or 401 response if not
      */
     @PostMapping("/login")
-    public ResponseEntity<JwtToken> login(@RequestBody Users users) {
-        JwtToken jwtToken = loginService.authenticate(users);
+    public ResponseEntity<JwtToken> login(@RequestBody AppUser appUser) {
+        JwtToken jwtToken = loginService.authenticate(appUser);
         return jwtToken != null ? ResponseEntity.ok(jwtToken) :
                 ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
