@@ -19,9 +19,13 @@ public class SpringDataRestCustomization implements RepositoryRestConfigurer {
             CorsRegistry registry) {
 
         String clientOrigin = environment.getProperty("clientOrigin");
+        String clientOrigin2 = environment.getProperty("clientOrigin2");
 
         registry.addMapping("/**")
-						.allowedOrigins(clientOrigin)
+						.allowedOrigins(
+                                clientOrigin,
+                                clientOrigin2
+                        )
 						.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
 						.allowCredentials(true);
