@@ -30,7 +30,8 @@ jobs:
 
       - name: Update application.properties
         run:
-          echo "spring.profiles.active=prod" >> src/main/resources/application.properties
+          echo "mailing.host=${{ secrets.MAILING_HOST }}" >> src/main/resources/application.properties
+          echo "mailing.token=${{ secret.MAILING_TOKEN }}" >> src/main/resources/application.properties
 
       - name: Build with Maven
         run: mvn clean install -P production
